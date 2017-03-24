@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#03A9F4</color> <!--light blue 500-->
+    <color name="colorPrimaryDark">#0288D1</color> <!--light blue 700-->
+    <color name="colorAccent">#FF4081</color>
+    <color name="buttonSelect">#80DEEA</color>
+    <color name="textPrimary">#000000</color>
+    <color name="textSecond">#616161</color>
+    <color name="dividerColor">#BDBDBD</color>
+    <color name="lightPrimary">#00B0FF</color>
+    <color name="window_background">#FFF5F5F5</color>
+</resources>

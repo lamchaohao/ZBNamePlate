@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context="com.gzzb.zbnameplate.fragment.SettingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tvSetConfig"
+        android:drawableLeft="@drawable/ic_phonelink_setup_yellow_900_36dp"
+        style="@style/MainFragGuideText"
+        android:text="参数设置"/>
+
+    <TextView
+        android:id="@+id/tvSetBrightness"
+        android:drawableLeft="@drawable/ic_settings_brightness_green_a700_36dp"
+        style="@style/MainFragGuideText"
+        android:text="屏幕亮度"/>
+
+    <TextView
+        android:id="@+id/tvSetDevice"
+        android:drawableLeft="@drawable/ic_tap_and_play_blue_700_36dp"
+        style="@style/MainFragGuideText"
+        android:text="铭牌管理"/>
+</LinearLayout>

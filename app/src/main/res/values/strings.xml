@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WiFi铭牌</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="text_add_tips">请点击右下角+添加内容</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
