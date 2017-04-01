@@ -38,6 +38,19 @@
         </activity>
         <activity android:name=".activity.DeviceManageActivity">
         </activity>
+        <activity android:name=".activity.MultiSendActivity">
+        </activity>
+        <activity android:name=".activity.SelectAccountActivity">
+        </activity>
+        <activity android:name=".activity.AddFromFileActivity">
+        </activity>
+        <activity android:name=".activity.BrightnessActivity">
+        </activity>
+        <activity
+            android:name=".activity.BaseWifiActivity"
+            android:label="@string/title_activity_base_wifi"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>

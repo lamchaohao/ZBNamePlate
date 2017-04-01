@@ -9,8 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,15 +21,15 @@ import com.gzzb.zbnameplate.R;
 import com.gzzb.zbnameplate.bean.Account;
 import com.gzzb.zbnameplate.dao.AccountDao;
 import com.gzzb.zbnameplate.global.Global;
-import com.gzzb.zbnameplate.utils.DrawBitmapUtil;
-import com.gzzb.zbnameplate.utils.GenFileUtil;
+import com.gzzb.zbnameplate.utils.genfile.DrawBitmapUtil;
+import com.gzzb.zbnameplate.utils.genfile.GenFileUtil;
 import com.gzzb.zbnameplate.view.photoView.PhotoView;
 
 import java.util.List;
 
 ;
 
-public class EditActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText mEtName;
     private PhotoView mIvPreview;
@@ -73,7 +71,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        setActionBar();
         mIvPreview = (PhotoView) findViewById(R.id.iv_preview);
         mIvPreview.enable();
         //设置缩放倍数
@@ -116,12 +113,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void setActionBar() {
-        ActionBar mActionBar=getSupportActionBar();
-        mActionBar.setHomeButtonEnabled(true);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setTitle("编辑");
-    }
 
     @Override
     public void onClick(View v) {
@@ -223,15 +214,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
         return drawWidth;
     }
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return super.onSupportNavigateUp();
-    }
+
 
     @Override
     public void onBackPressed() {
-       mAccountDao.insertOrReplace(mAccount);
+        mAccountDao.insertOrReplace(mAccount);
         Intent intent =new Intent();
         intent.putExtra(Global.EX_NEW_NAME,mAccount.getAccountName());
         setResult(RESULT_OK,intent);

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gzzb.zbnameplate.R;
+import com.gzzb.zbnameplate.activity.BrightnessActivity;
 import com.gzzb.zbnameplate.activity.DeviceManageActivity;
 
 import butterknife.BindView;
@@ -49,6 +50,7 @@ public class SettingFragment extends Fragment {
             case R.id.tvSetConfig:
                 break;
             case R.id.tvSetBrightness:
+                startActivity(new Intent(getContext(), BrightnessActivity.class));
                 break;
             case R.id.tvSetDevice:
                 startActivity(new Intent(getContext(), DeviceManageActivity.class));

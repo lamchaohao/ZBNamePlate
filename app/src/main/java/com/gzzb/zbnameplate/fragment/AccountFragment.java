@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,38 +26,56 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gzzb.zbnameplate.App;
 import com.gzzb.zbnameplate.R;
+import com.gzzb.zbnameplate.activity.AddFromFileActivity;
 import com.gzzb.zbnameplate.activity.EditActivity;
+import com.gzzb.zbnameplate.activity.MultiSendActivity;
 import com.gzzb.zbnameplate.adapter.AccountAdapter;
+import com.gzzb.zbnameplate.adapter.Listener;
 import com.gzzb.zbnameplate.bean.Account;
 import com.gzzb.zbnameplate.dao.AccountDao;
 import com.gzzb.zbnameplate.global.Global;
-import com.gzzb.zbnameplate.utils.DrawBitmapUtil;
-import com.gzzb.zbnameplate.utils.GenFileUtil;
-import com.gzzb.zbnameplate.utils.SendDataUtil;
+import com.gzzb.zbnameplate.utils.genfile.DrawBitmapUtil;
+import com.gzzb.zbnameplate.utils.genfile.GenFileUtil;
+import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.gzzb.zbnameplate.utils.GenFileUtil.START_SEND_DATA;
-import static com.gzzb.zbnameplate.utils.SendDataUtil.CONN_ERRO;
-import static com.gzzb.zbnameplate.utils.SendDataUtil.UPDATE_PROGRESS;
-import static com.gzzb.zbnameplate.utils.SendDataUtil.WIFI_ERRO;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.gzzb.zbnameplate.global.Global.CONN_ERRO;
+import static com.gzzb.zbnameplate.global.Global.GENFILE_DONE;
+import static com.gzzb.zbnameplate.global.Global.UPDATE_PROGRESS;
+import static com.gzzb.zbnameplate.global.Global.WIFI_ERRO;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment implements AccountAdapter.OnItemClickListener,
-        AccountAdapter.OnItemLongClickListener,
-        AccountAdapter.OnEditClickListener,
-        AccountAdapter.OnSendClickListener ,View.OnClickListener{
+public class AccountFragment extends Fragment implements Listener.OnItemClickListener,
+        Listener.OnItemLongClickListener,
+        Listener.OnEditClickListener,
+        Listener.OnSendClickListener, View.OnClickListener {
 
 
     private static final int EDIT_ACCOUNT_CODE = 201;
-    private FloatingActionButton mFab;
+    private static final int REQUEST_ADD_CODE = 230;
+    @BindView(R.id.fab_account_add)
+    FloatingActionButton mFabAccountAdd;
+    @BindView(R.id.fab_account_send)
+    FloatingActionButton mFabAccountSend;
+    @BindView(R.id.fab_account_delete)
+    FloatingActionButton mFabAccountDelete;
+    @BindView(R.id.fab_account_addFromfile)
+    FloatingActionButton mFabAccountAddFromfile;
     private AccountDao mAccountDao;
     private List<Account> mAccountList;
     private AccountAdapter mAdapter;
     private int mPosition;
     private boolean isSending;
+    private RecyclerView mRecyclerView;
+    private View mTbTips;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -77,24 +96,75 @@ public class AccountFragment extends Fragment implements AccountAdapter.OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accout, container, false);
+        ButterKnife.bind(this, view);
         initView(view);
         return view;
     }
 
     private void initView(View view) {
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab_account);
-        mFab.setOnClickListener(this);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rcv_account);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new AccountAdapter(getContext(),mAccountList);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rcv_account);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new AccountAdapter(getContext(), mAccountList);
+        mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         mAdapter.setOnItemLongClickListener(this);
         mAdapter.setOnEditClickListener(this);
         mAdapter.setOnSendClickListener(this);
-        View tbTips = view.findViewById(R.id.tv_account_tips);
-        if (mAccountList.size()==0){
-            tbTips.setVisibility(View.VISIBLE);
+        mTbTips = view.findViewById(R.id.tv_account_tips);
+        if (mAccountList.size() == 0) {
+            mTbTips.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @OnClick({R.id.fab_account_add, R.id.fab_account_send, R.id.fab_account_delete,R.id.fab_account_addFromfile})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab_account_add:
+                if (!mAdapter.isMutilChoiceMode()) {
+                    Account account = new Account();
+                    account.setId(System.currentTimeMillis());
+                    account.setAccountName("新建");
+                    mAccountList.add(account);
+                    mAccountDao.insert(account);
+                    mAdapter.notifyItemInserted(mAccountList.size());
+                    mRecyclerView.smoothScrollToPosition(mAccountList.size());
+                }
+                if (mAccountList.size() != 0) {
+                    mTbTips.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.fab_account_send:
+                startActivity(new Intent(getActivity(), MultiSendActivity.class));
+                break;
+            case R.id.fab_account_addFromfile:
+                Intent intent = new Intent(getActivity(), AddFromFileActivity.class);
+                startActivityForResult(intent,REQUEST_ADD_CODE);
+                break;
+            case R.id.fab_account_delete:
+                if (mAdapter.isMutilChoiceMode()) {
+                    Log.i("delete", "删除,取消多选");
+                    boolean[] isSelected = mAdapter.getIsSelected();
+                    List<Account> toDelete = new ArrayList<>();
+                    for (int i = 0; i < isSelected.length; i++) {
+                        if (isSelected[i]) {
+                            toDelete.add(mAccountList.get(i));
+                        }
+                    }
+                    for (Account tode : toDelete) {
+                        mAccountDao.delete(tode);
+                        mAccountList.remove(tode);
+                    }
+                    if (toDelete.size() != 0)
+                        Snackbar.make(mRecyclerView, "所选已删除", Snackbar.LENGTH_SHORT).show();
+                    mAdapter.setMutilChoiceMode(false);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    boolean[] selected = new boolean[mAccountList.size()];
+                    mAdapter.setIsSelected(selected);
+                    mAdapter.setMutilChoiceMode(true);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
@@ -122,11 +192,11 @@ public class AccountFragment extends Fragment implements AccountAdapter.OnItemCl
     }
 
     @Override
-    public void onClick(View v, int position) {
+    public void onItemClick(View v, int position) {
         mPosition = position;
         Intent intent = new Intent(getContext(), EditActivity.class);
-        intent.putExtra(Global.EX_ACCOUNT_ID,mAccountList.get(position).getId());
-        startActivityForResult(intent,EDIT_ACCOUNT_CODE);
+        intent.putExtra(Global.EX_ACCOUNT_ID, mAccountList.get(position).getId());
+        startActivityForResult(intent, EDIT_ACCOUNT_CODE);
     }
 
     @Override
@@ -140,9 +210,10 @@ public class AccountFragment extends Fragment implements AccountAdapter.OnItemCl
                         String accountName = account.getAccountName();
                         mAccountDao.delete(account);
                         mAccountList.remove(position);
-                        mAdapter.notifyDataSetChanged();
-                        Snackbar.make(mFab,accountName+"已删除",Snackbar.LENGTH_SHORT).show();
-                    }})
+                        mAdapter.notifyItemRemoved(position);
+                        Snackbar.make(mRecyclerView, accountName + "已删除", Snackbar.LENGTH_SHORT).show();
+                    }
+                })
                 .setNegativeButton("取消", null)
                 .show();
 
@@ -158,60 +229,68 @@ public class AccountFragment extends Fragment implements AccountAdapter.OnItemCl
         drawBitmapUtil.setUnderline(account.getIsUnderline());
         Bitmap bitmap = drawBitmapUtil.drawBitmap();
         if (isSending) {
-            Snackbar.make(mFab,"已经在发送",Snackbar.LENGTH_SHORT).show();
-        }else {
-            GenFileUtil genFileUtil = new GenFileUtil(getContext(),bitmap,mHandler);
+            Snackbar.make(mRecyclerView, "已经在发送", Snackbar.LENGTH_SHORT).show();
+        } else {
+            GenFileUtil genFileUtil = new GenFileUtil(getContext(), bitmap, mHandler);
             genFileUtil.startGenFile();
             isSending = true;
-            Snackbar.make(mFab,"开始发送 ",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mRecyclerView, "开始发送 ", Snackbar.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        Account account=new Account();
-        account.setId(System.currentTimeMillis());
-        account.setAccountName("新建");
-        mAccountList.add(account);
-        mAccountDao.insert(account);
-        mAdapter.notifyItemChanged(mAccountList.size());
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode==getActivity().RESULT_OK&&requestCode==EDIT_ACCOUNT_CODE){
+        if (resultCode == getActivity().RESULT_OK && requestCode == EDIT_ACCOUNT_CODE) {
             String newName = data.getStringExtra(Global.EX_NEW_NAME);
             Account account = mAccountList.get(mPosition);
             account.setAccountName(newName);
             mAccountDao.insertOrReplace(account);
             mAdapter.notifyItemChanged(mPosition);
+        }else if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_ADD_CODE){
+            mAccountList.clear();
+            List<Account> list = mAccountDao.queryBuilder().list();
+            mAccountList.addAll(list);
+            mAdapter.notifyDataSetChanged();
+            if (mAccountList.size() != 0) {
+                mTbTips.setVisibility(View.GONE);
+            }
         }
     }
 
-    private Handler mHandler = new Handler(){
+    public boolean isDeleteMode() {
+        return mAdapter.isMutilChoiceMode();
+    }
+
+    public void cancleDeleteMode() {
+        mAdapter.setMutilChoiceMode(false);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case START_SEND_DATA:
-                    SendDataUtil sendDataUtil = new SendDataUtil(getContext(),this);
+                case GENFILE_DONE:
+                    SendDataUtil sendDataUtil = new SendDataUtil(getContext(), this);
                     sendDataUtil.send();
                     break;
                 case UPDATE_PROGRESS:
                     int arg1 = msg.arg1;
-                    if (arg1==100){
+                    if (arg1 == 100) {
                         isSending = false;
-                        Snackbar.make(mFab,"已发送 ",Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRecyclerView, "已发送 ", Snackbar.LENGTH_SHORT).show();
                     }
 
                     break;
                 case WIFI_ERRO:
                     isSending = false;
-                    Toast.makeText(getContext(),"所连接WiFi非本公司产品，请切换WiFi",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "所连接WiFi非本公司产品，请切换WiFi", Toast.LENGTH_LONG).show();
                     getContext().startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                     break;
                 case CONN_ERRO:
                     isSending = false;
-                    Toast.makeText(getContext(),"连接超时，请重试",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "连接超时，请重试", Toast.LENGTH_LONG).show();
                     break;
             }
         }

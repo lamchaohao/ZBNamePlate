@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.gzzb.zbnameplate.fragment.ConnectFragment;
 import com.gzzb.zbnameplate.global.Global;
+
+import static com.gzzb.zbnameplate.global.Global.UPDATE_NETWORK_INFO;
+import static com.gzzb.zbnameplate.global.Global.WIFI_AVAILABLE_ACTION;
+import static com.gzzb.zbnameplate.global.Global.WIFI_DISABLE;
+import static com.gzzb.zbnameplate.global.Global.WIFI_ENABLED;
 
 public class WiFiReceiver extends BroadcastReceiver {
     private Handler mHandler;
@@ -22,16 +26,16 @@ public class WiFiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-            mHandler.sendEmptyMessage(ConnectFragment.WIFI_AVAILABLE_ACTION);
+            mHandler.sendEmptyMessage(WIFI_AVAILABLE_ACTION);
         }else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
             // 这个监听wifi的打开与关闭，与wifi的连接无关
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             switch (wifiState) {
                 case WifiManager.WIFI_STATE_DISABLED://wifi closed
-                    mHandler.sendEmptyMessage(ConnectFragment.WIFI_DISABLE);
+                    mHandler.sendEmptyMessage(WIFI_DISABLE);
                     break;
                 case WifiManager.WIFI_STATE_ENABLED://wifi enable
-                    mHandler.sendEmptyMessage(ConnectFragment.WIFI_ENABLED);
+                    mHandler.sendEmptyMessage(WIFI_ENABLED);
                     break;
             }
         }else if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)){
@@ -42,7 +46,7 @@ public class WiFiReceiver extends BroadcastReceiver {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Global.EXTRA_NETWORKSTATE,networkInfo);
                 message.setData(bundle);
-                message.what=ConnectFragment.UPDATE_NETWORK_INFO;
+                message.what=UPDATE_NETWORK_INFO;
                 mHandler.sendMessage(message);
 
             }

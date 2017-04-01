@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mLlSetting;
     private ImageView mIvSetting;
     private TextView mTvSetting;
+    private AccountFragment mAccountFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
 
         mToolbarTitle = (TextView) mToolbar.findViewById(R.id.tv_toolbar_title);
-        mToolbarTitle.setText("编辑");
         setSupportActionBar(mToolbar);
     }
 
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragmentList = new ArrayList<>();
         mViewPager = (ViewPager) findViewById(R.id.vp_main);
         mSupportFragmentManager = getSupportFragmentManager();
-        AccountFragment accountFragment = new AccountFragment();
+        mAccountFragment = new AccountFragment();
         ConnectFragment connectFragment = new ConnectFragment();
         SettingFragment settingFragment = new SettingFragment();
-        mFragmentList.add(accountFragment);
+        mFragmentList.add(mAccountFragment);
         mFragmentList.add(connectFragment);
         mFragmentList.add(settingFragment);
         MainFragmentAdapter adapter =new MainFragmentAdapter(mSupportFragmentManager,mFragmentList);
@@ -150,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        if (mAccountFragment.isDeleteMode()) {
+            mAccountFragment.cancleDeleteMode();
+            return;
+        }
+
         if (!backFlag){//第一次点击
             Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
             firstTime = System.currentTimeMillis();

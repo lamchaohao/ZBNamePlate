@@ -24,15 +24,18 @@ public class AccountAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<Account> mAccountList;
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
-    private OnEditClickListener mOnEditClickListener;
-    private OnSendClickListener mOnSendClickListener;
+    private boolean[] isSelected;
+    private boolean isMutilChoiceMode;
+    private Listener.OnItemClickListener mOnItemClickListener;
+    private Listener.OnItemLongClickListener mOnItemLongClickListener;
+    private Listener.OnEditClickListener mOnEditClickListener;
+    private Listener.OnSendClickListener mOnSendClickListener;
 
 
     public AccountAdapter(Context context, List<Account> accounts) {
         mContext=context;
         mAccountList=accounts;
+        isSelected = new boolean[mAccountList.size()];
     }
 
     @Override
@@ -49,11 +52,27 @@ public class AccountAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         AccountViewHolder viewHolder= (AccountViewHolder) holder;
         viewHolder.tvName.setText(mAccountList.get(position).getAccountName());
+        //是否选择删除
+        if (isMutilChoiceMode){
+            viewHolder.ivDelete.setVisibility(View.VISIBLE);
+            if (isSelected[position])
+                viewHolder.ivDelete.setImageResource(R.drawable.ic_remove_circle_red_a700_36dp);
+            else
+                viewHolder.ivDelete.setImageResource(R.drawable.ic_remove_circle_outline_red_200_36dp);
+        }else {
+            viewHolder.ivDelete.setVisibility(View.GONE);
+        }
+
         if (mOnItemClickListener!=null){
             viewHolder.flMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.onClick(v,position);
+                    if (isMutilChoiceMode()) {
+                        isSelected[position]= !isSelected[position];
+                        notifyItemChanged(position);
+                    }else {
+                        mOnItemClickListener.onItemClick(v,position);
+                    }
                 }
             });
         }
@@ -61,7 +80,9 @@ public class AccountAdapter extends RecyclerView.Adapter {
             viewHolder.flMain.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mOnItemLongClickListener.onLongClick(v,position);
+                    if (!isMutilChoiceMode()){
+                        mOnItemLongClickListener.onLongClick(v,position);
+                    }
                     return true;
                 }
             });
@@ -70,7 +91,9 @@ public class AccountAdapter extends RecyclerView.Adapter {
             viewHolder.ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  if (!isMutilChoiceMode()) {
                     mOnEditClickListener.onEditClick(v,position);
+                  }
                 }
             });
         }
@@ -78,7 +101,9 @@ public class AccountAdapter extends RecyclerView.Adapter {
             viewHolder.ivSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnSendClickListener.onSendClick(v,position);
+                    if (!isMutilChoiceMode()) {
+                        mOnSendClickListener.onSendClick(v,position);
+                    }
                 }
             });
         }
@@ -98,44 +123,48 @@ public class AccountAdapter extends RecyclerView.Adapter {
         ImageView ivEdit;
         ImageView ivSend;
         LinearLayout flMain;
+        ImageView ivDelete;
         public AccountViewHolder(View itemView) {
             super(itemView);
             flMain= (LinearLayout) itemView.findViewById(R.id.ll_account);
             ivEdit = (ImageView) itemView.findViewById(R.id.iv_account_edit);
             ivSend = (ImageView) itemView.findViewById(R.id.iv_account_send);
             tvName = (TextView) itemView.findViewById(R.id.tv_account_name);
+            ivDelete= (ImageView) itemView.findViewById(R.id.iv_account_delete);
         }
 
     }
 
 
-
-    public interface OnItemClickListener{
-        void onClick(View v, int position);
-    }
-
-    public interface OnItemLongClickListener{
-        void onLongClick(View v, int position);
-    }
-    public interface OnEditClickListener{
-        void onEditClick(View v, int position);
-    }
-    public interface OnSendClickListener{
-        void onSendClick(View v, int position);
-    }
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(Listener.OnItemClickListener listener){
         mOnItemClickListener=listener;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
+    public void setOnItemLongClickListener(Listener.OnItemLongClickListener onItemLongClickListener){
         mOnItemLongClickListener=onItemLongClickListener;
     }
 
-    public void setOnEditClickListener(OnEditClickListener onEditClickListener) {
+    public void setOnEditClickListener(Listener.OnEditClickListener onEditClickListener) {
         mOnEditClickListener = onEditClickListener;
     }
 
-    public void setOnSendClickListener(OnSendClickListener onSendClickListener) {
+    public void setOnSendClickListener(Listener.OnSendClickListener onSendClickListener) {
         mOnSendClickListener = onSendClickListener;
+    }
+
+    public void setMutilChoiceMode(boolean mutilChoiceMode) {
+        isMutilChoiceMode = mutilChoiceMode;
+    }
+
+    public boolean isMutilChoiceMode() {
+        return isMutilChoiceMode;
+    }
+
+    public void setIsSelected(boolean[] isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public boolean[] getIsSelected() {
+        return isSelected;
     }
 }

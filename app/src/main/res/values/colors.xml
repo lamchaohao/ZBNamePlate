@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#03A9F4</color> <!--light blue 500-->
-    <color name="colorPrimaryDark">#0288D1</color> <!--light blue 700-->
+    <color name="colorPrimaryDark">#03A9F4</color> <!--light blue 700 0288D1-->
     <color name="colorAccent">#FF4081</color>
     <color name="buttonSelect">#80DEEA</color>
     <color name="textPrimary">#000000</color>

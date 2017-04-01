@@ -29,6 +29,14 @@ public class Account {
     @Generated(hash = 882125521)
     public Account() {
     }
+    public Account(Account account) {
+        this.id = account.getId();
+        this.sortNumber = account.getSortNumber();
+        this.accountName = account.getAccountName();
+        this.isBold = account.getIsBold();
+        this.isItalic = account.getIsItalic();
+        this.isUnderline = account.getIsUnderline();
+    }
     public long getId() {
         return this.id;
     }

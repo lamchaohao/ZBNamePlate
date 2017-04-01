@@ -25,6 +25,22 @@ public class DeviceAdapter extends RecyclerView.Adapter {
 
     private List<Device> mDevices;
     private Context mContext;
+    private Listener.OnItemClickListener mItemListener;
+    private Listener.OnEditClickListener mEditListener;
+    private Listener.OnItemLongClickListener mLongClickListener;
+
+    public void setEditListener(Listener.OnEditClickListener editListener) {
+        mEditListener = editListener;
+    }
+
+    public void setItemListener(Listener.OnItemClickListener itemListener) {
+        mItemListener = itemListener;
+    }
+
+
+    public void setLongClickListener(Listener.OnItemLongClickListener longClickListener) {
+        mLongClickListener = longClickListener;
+    }
 
     public DeviceAdapter(List<Device> devices, Context context) {
         mDevices = devices;
@@ -42,10 +58,38 @@ public class DeviceAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        DeviceHolder deviceHolder = (DeviceHolder) holder;
+        final DeviceHolder deviceHolder = (DeviceHolder) holder;
         deviceHolder.mTvDeviceName.setText(mDevices.get(position).getDeviceName());
         deviceHolder.mTvDeviceSsid.setText(mDevices.get(position).getSsid());
+        if (mEditListener!=null){
+            deviceHolder.mIvDeviceEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = deviceHolder.getLayoutPosition();
+                    mEditListener.onEditClick(v,pos);
+                }
+            });
+        }
 
+        if (mItemListener!=null){
+            deviceHolder.mLlDeviceItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = deviceHolder.getLayoutPosition();
+                    mItemListener.onItemClick(v,pos);
+                }
+            });
+        }
+        if (mLongClickListener!=null) {
+            deviceHolder.mLlDeviceItem.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = deviceHolder.getLayoutPosition();
+                    mLongClickListener.onLongClick(v,pos);
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -59,15 +103,17 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         @BindView(R.id.tv_device_ssid)
         TextView mTvDeviceSsid;
         @BindView(R.id.iv_account_edit)
-        ImageView mIvAccountEdit;
+        ImageView mIvDeviceEdit;
         @BindView(R.id.ll_deviceItem)
         LinearLayout mLlDeviceItem;
+
         public DeviceHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(DeviceHolder.this, itemView);
         }
 
-
     }
+
+
 
 }

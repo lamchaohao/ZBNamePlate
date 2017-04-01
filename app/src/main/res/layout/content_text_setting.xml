@@ -18,7 +18,7 @@
             android:id="@+id/ib_fgText_setBold"
             style="@style/TextEditIcon"
             android:layout_weight="1"
-            android:src="@mipmap/ic_format_bold_black_48dp"
+            android:src="@drawable/ic_format_bold_black_48dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
@@ -26,7 +26,7 @@
             style="@style/TextEditIcon"
             android:id="@+id/ib_fgText_setItalic"
             android:layout_weight="1"
-            android:src="@mipmap/ic_format_italic_black_48dp"
+            android:src="@drawable/ic_format_italic_black_48dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:text="Font"
             android:fontFamily="sans-serif"
-            android:src="@mipmap/ic_format_underlined_black_48dp"
+            android:src="@drawable/ic_format_underlined_black_48dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
