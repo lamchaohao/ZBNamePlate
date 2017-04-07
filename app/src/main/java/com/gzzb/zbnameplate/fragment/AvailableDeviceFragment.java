@@ -31,6 +31,7 @@ import com.gzzb.zbnameplate.adapter.AvaliAdapter;
 import com.gzzb.zbnameplate.adapter.Listener;
 import com.gzzb.zbnameplate.bean.Device;
 import com.gzzb.zbnameplate.dao.DeviceDao;
+import com.gzzb.zbnameplate.global.Global;
 import com.gzzb.zbnameplate.receiver.WiFiReceiver;
 import com.gzzb.zbnameplate.utils.system.WifiAdmin;
 
@@ -61,7 +62,7 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
     private AvaliAdapter mAdapter;
     private DeviceDao mDeviceDao;
     private List<Device> mAddedList;
-
+    private View mTipsView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +81,19 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
 
     private void initView(View view) {
         RecyclerView rvAvail = (RecyclerView) view.findViewById(R.id.rvAvail);
+        mTipsView = view.findViewById(R.id.rv_avail_tips);
         rvAvail.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new AvaliAdapter(getActivity(),mWifiList);
         rvAvail.setHasFixedSize(true);//设定高度固定,可提高效率
         rvAvail.setAdapter(mAdapter);
         mAdapter.setItemOnClickListener(this);
         mAdapter.setOnAddOnClickListener(this);
+
+        if (mWifiList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
 
     }
     private void loadData() {
@@ -95,8 +103,8 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
         List<ScanResult> scanResults = mWifiAdmin.startScan();
         mWifiList=new ArrayList<>();
         for (ScanResult scanResult : scanResults) {
-            boolean startFlag = scanResult.SSID.startsWith("HC-LED[");
-            boolean endFlag = scanResult.SSID.endsWith("]");
+            boolean startFlag = scanResult.SSID.startsWith(Global.SSID_START);
+            boolean endFlag = scanResult.SSID.endsWith(Global.SSID_END);
             boolean isAdded=false;
             for (Device device : mAddedList) {
                 String ssid = device.getSsid();
@@ -134,8 +142,8 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
         mAddedList.clear();
         mAddedList = mDeviceDao.queryBuilder().list();
         for (ScanResult scanResult : scanResults) {
-            boolean startFlag = scanResult.SSID.startsWith("HC-LED[");
-            boolean endFlag = scanResult.SSID.endsWith("]");
+            boolean startFlag = scanResult.SSID.startsWith(Global.SSID_START);
+            boolean endFlag = scanResult.SSID.endsWith(Global.SSID_END);
             boolean isAdded=false;
             for (Device device : mAddedList) {
                 String ssid = device.getSsid();
@@ -149,7 +157,11 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
             }
         }
         mAdapter.notifyDataSetChanged();
-
+        if (mWifiList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
     }
 
 
@@ -209,5 +221,10 @@ public class AvailableDeviceFragment extends Fragment implements Listener.OnAddO
         mDeviceDao.insertOrReplace(device);
         mAdapter.notifyItemRemoved(position);
         ((DeviceManageActivity)getActivity()).addNewDevice(device);
+        if (mWifiList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
     }
 }

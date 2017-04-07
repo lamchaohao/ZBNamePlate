@@ -49,6 +49,12 @@ public class SendAdapter extends RecyclerView.Adapter{
         Account account = namePlate.getAccount();
         viewHolder.tvSendDevice.setText(device.getDeviceName());
         viewHolder.tvSendWifi.setText(device.getSsid());
+
+        if (device.getIsOnline()) {
+            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_connected_green_a700_36dp);
+        }else {
+            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_light_blue_500_36dp);
+        }
         if (account!=null){
             viewHolder.tvSendName.setText(account.getAccountName());
         }

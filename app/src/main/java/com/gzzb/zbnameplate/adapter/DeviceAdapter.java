@@ -57,8 +57,9 @@ public class DeviceAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int pos) {
         final DeviceHolder deviceHolder = (DeviceHolder) holder;
+        int position = deviceHolder.getLayoutPosition();
         deviceHolder.mTvDeviceName.setText(mDevices.get(position).getDeviceName());
         deviceHolder.mTvDeviceSsid.setText(mDevices.get(position).getSsid());
         if (mEditListener!=null){

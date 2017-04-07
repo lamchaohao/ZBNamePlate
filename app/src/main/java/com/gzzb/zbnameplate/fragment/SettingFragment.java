@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gzzb.zbnameplate.R;
+import com.gzzb.zbnameplate.activity.AboutActivity;
 import com.gzzb.zbnameplate.activity.BrightnessActivity;
+import com.gzzb.zbnameplate.activity.ConnectActivity;
 import com.gzzb.zbnameplate.activity.DeviceManageActivity;
+import com.gzzb.zbnameplate.activity.SelectEffectActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,16 +27,15 @@ public class SettingFragment extends Fragment {
 
 
     @BindView(R.id.tvSetConfig)
-    TextView mTvConfig;
+    TextView mTvSetConfig;
     @BindView(R.id.tvSetBrightness)
-    TextView mTvBrightness;
+    TextView mTvSetBrightness;
     @BindView(R.id.tvSetDevice)
-    TextView mTvDevice;
-
-    public SettingFragment() {
-        // Required empty public constructor
-    }
-
+    TextView mTvSetDevice;
+    @BindView(R.id.tvSetConnect)
+    TextView mTvSetConnect;
+    @BindView(R.id.tvSetAbout)
+    TextView mTvSetAbout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,16 +46,24 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-    @OnClick({R.id.tvSetConfig, R.id.tvSetBrightness, R.id.tvSetDevice})
+
+    @OnClick({R.id.tvSetConfig, R.id.tvSetBrightness, R.id.tvSetDevice, R.id.tvSetConnect,R.id.tvSetAbout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tvSetConfig:
+                startActivity(new Intent(getContext(), SelectEffectActivity.class));
                 break;
             case R.id.tvSetBrightness:
                 startActivity(new Intent(getContext(), BrightnessActivity.class));
                 break;
             case R.id.tvSetDevice:
                 startActivity(new Intent(getContext(), DeviceManageActivity.class));
+                break;
+            case R.id.tvSetConnect:
+                startActivity(new Intent(getContext(), ConnectActivity.class));
+                break;
+            case R.id.tvSetAbout:
+                startActivity(new Intent(getContext(), AboutActivity.class));
                 break;
         }
     }

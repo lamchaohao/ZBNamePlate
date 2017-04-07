@@ -1,10 +1,19 @@
 <resources>
-    <string name="app_name">WiFi铭牌</string>
+    <string name="app_name">无线桌牌</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="text_add_tips">请点击右下角+添加内容</string>
+    <string name="test">通信</string>
+    <string name="reset">重置</string>
+    <string name="pause">暂停</string>
+    <string name="resume">恢复</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_base_wifi">BaseWifiActivity</string>
+    <string name="testSuccess">通信成功</string>
+    <string name="pauseSuccess">暂停成功</string>
+    <string name="resumeSuccess">恢复成功</string>
+    <string name="resetSuccess">重置成功</string>
+    <string name="tos_wifi_switch">所连接WiFi非本公司产品，请切换WiFi</string>
+    <string name="tos_wifi_timeout">连接超时，请重试</string>
+    <string name="refuse_connect">拒绝服务</string>
+    <string name="title_activity_base_wifi">无线铭牌</string>
+    <string name="title_activity_sort">无线铭牌</string>
+
 </resources>

@@ -3,6 +3,20 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="com.gzzb.zbnameplate.fragment.DevicesFragment">
+    <RelativeLayout
+        android:id="@+id/rv_devices_tips"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="左划查看可添加设备"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:drawableRight="@drawable/ic_add_circle_green_a700_36dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvDevices"

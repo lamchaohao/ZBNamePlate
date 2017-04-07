@@ -71,4 +71,14 @@ public class Device {
     public void setOnline(boolean online) {
         isOnline = online;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "isOnline=" + isOnline +
+                ", ssid='" + ssid + '\'' +
+                ", id=" + id +
+                ", deviceName='" + deviceName + '\'' +
+                '}';
+    }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener {
 
-
     private LinearLayout mLlAccount;
     private LinearLayout mLlConnet;
     private ImageView mIvAccount;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initToolbar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
 
-        mToolbarTitle = (TextView) mToolbar.findViewById(R.id.tv_toolbar_title);
+        mToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         setSupportActionBar(mToolbar);
     }
 

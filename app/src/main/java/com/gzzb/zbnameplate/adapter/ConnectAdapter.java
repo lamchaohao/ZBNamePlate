@@ -51,8 +51,9 @@ public class ConnectAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int pos) {
         final WifiAdapterViewHolder viewHolder = (WifiAdapterViewHolder) holder;
+        final int position=viewHolder.getLayoutPosition();
         boolean hasName=false;
         for (Device device : mDevices) {
             if (mWifiList.get(position).SSID.equals(device.getSsid())) {

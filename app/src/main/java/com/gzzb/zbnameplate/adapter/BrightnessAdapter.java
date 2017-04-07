@@ -42,10 +42,10 @@ public class BrightnessAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int pos) {
         final SendViewHolder viewHolder = (SendViewHolder) holder;
+        final int position=viewHolder.getLayoutPosition();
         final Device device = mDeviceList.get(position);
-
         viewHolder.tvDevice.setText(device.getDeviceName());
 
         if (device.getIsOnline()) {

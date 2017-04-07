@@ -46,10 +46,15 @@
         </activity>
         <activity android:name=".activity.BrightnessActivity">
         </activity>
-        <activity
-            android:name=".activity.BaseWifiActivity"
-            android:label="@string/title_activity_base_wifi"
-            android:theme="@style/AppTheme">
+        <activity android:name=".activity.SortActivity">
+        </activity>
+        <activity android:name=".activity.SelectEffectActivity">
+        </activity>
+        <activity android:name=".activity.SelectFontActivity">
+        </activity>
+        <activity android:name=".activity.ConnectActivity">
+        </activity>
+        <activity android:name=".activity.AboutActivity">
         </activity>
     </application>
 

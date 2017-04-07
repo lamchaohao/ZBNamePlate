@@ -32,6 +32,7 @@ public class DevicesFragment extends Fragment implements Listener.OnItemClickLis
     private DeviceDao mDeviceDao;
     private DeviceAdapter mAdapter;
     private List<Device> mDeviceList;
+    private View mTipsView;
 
     public DevicesFragment() {
         // Required empty public constructor
@@ -48,8 +49,14 @@ public class DevicesFragment extends Fragment implements Listener.OnItemClickLis
 
     private void initView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rvDevices);
+        mTipsView = view.findViewById(R.id.rv_devices_tips);
         mDeviceDao = ((App) getActivity().getApplication()).getDaoSession().getDeviceDao();
         mDeviceList = mDeviceDao.queryBuilder().list();
+        if (mDeviceList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
         mAdapter = new DeviceAdapter(mDeviceList,getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
@@ -102,10 +109,20 @@ public class DevicesFragment extends Fragment implements Listener.OnItemClickLis
                 })
                 .setNegativeButton("取消",null)
                 .show();
+        if (mDeviceList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
     }
 
     public void addNewDevice(Device device){
         mDeviceList.add(device);
+        if (mDeviceList.size()==0) {
+            mTipsView.setVisibility(View.VISIBLE);
+        }else {
+            mTipsView.setVisibility(View.GONE);
+        }
         mAdapter.notifyItemInserted(mDeviceList.size());
     }
 }

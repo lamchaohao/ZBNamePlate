@@ -34,9 +34,9 @@ import com.gzzb.zbnameplate.adapter.Listener;
 import com.gzzb.zbnameplate.bean.Account;
 import com.gzzb.zbnameplate.dao.AccountDao;
 import com.gzzb.zbnameplate.global.Global;
+import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 import com.gzzb.zbnameplate.utils.genfile.DrawBitmapUtil;
 import com.gzzb.zbnameplate.utils.genfile.GenFileUtil;
-import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ import static com.gzzb.zbnameplate.global.Global.WIFI_ERRO;
 public class AccountFragment extends Fragment implements Listener.OnItemClickListener,
         Listener.OnItemLongClickListener,
         Listener.OnEditClickListener,
-        Listener.OnSendClickListener, View.OnClickListener {
+        Listener.OnSendClickListener, View.OnClickListener ,View.OnLongClickListener{
 
 
     private static final int EDIT_ACCOUNT_CODE = 201;
@@ -75,7 +75,6 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
     private int mPosition;
     private boolean isSending;
     private RecyclerView mRecyclerView;
-    private View mTbTips;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -110,10 +109,7 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
         mAdapter.setOnItemLongClickListener(this);
         mAdapter.setOnEditClickListener(this);
         mAdapter.setOnSendClickListener(this);
-        mTbTips = view.findViewById(R.id.tv_account_tips);
-        if (mAccountList.size() == 0) {
-            mTbTips.setVisibility(View.VISIBLE);
-        }
+        mFabAccountDelete.setOnLongClickListener(this);
     }
 
     @OnClick({R.id.fab_account_add, R.id.fab_account_send, R.id.fab_account_delete,R.id.fab_account_addFromfile})
@@ -128,9 +124,6 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
                     mAccountDao.insert(account);
                     mAdapter.notifyItemInserted(mAccountList.size());
                     mRecyclerView.smoothScrollToPosition(mAccountList.size());
-                }
-                if (mAccountList.size() != 0) {
-                    mTbTips.setVisibility(View.GONE);
                 }
                 break;
             case R.id.fab_account_send:
@@ -222,11 +215,7 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
     @Override
     public void onSendClick(View v, int position) {
         Account account = mAccountList.get(position);
-        String name = account.getAccountName();
-        DrawBitmapUtil drawBitmapUtil = new DrawBitmapUtil(name);
-        drawBitmapUtil.setItalic(account.getIsItalic());
-        drawBitmapUtil.setBold(account.getIsBold());
-        drawBitmapUtil.setUnderline(account.getIsUnderline());
+        DrawBitmapUtil drawBitmapUtil = new DrawBitmapUtil(getActivity(),account);
         Bitmap bitmap = drawBitmapUtil.drawBitmap();
         if (isSending) {
             Snackbar.make(mRecyclerView, "已经在发送", Snackbar.LENGTH_SHORT).show();
@@ -252,9 +241,6 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
             List<Account> list = mAccountDao.queryBuilder().list();
             mAccountList.addAll(list);
             mAdapter.notifyDataSetChanged();
-            if (mAccountList.size() != 0) {
-                mTbTips.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -296,4 +282,26 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
         }
     };
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_account_delete:
+                new AlertDialog.Builder(getContext())
+                        .setMessage("你确定要删除全部吗?")
+                        .setPositiveButton("删除全部", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAccountDao.deleteInTx(mAccountList);
+                                mAccountList.clear();
+                                mAdapter.notifyDataSetChanged();
+                                Snackbar.make(mRecyclerView, "已删除所有名字", Snackbar.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+                break;
+
+        }
+        return true;
+    }
 }

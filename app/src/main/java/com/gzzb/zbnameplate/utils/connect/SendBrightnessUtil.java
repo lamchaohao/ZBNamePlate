@@ -239,7 +239,7 @@ public class SendBrightnessUtil {
         byte[] lineArray = intToByteArray(line, 2); //39-40 线带点数
         setInbyteArray(39,lineArray,dataBytes);
         dataBytes[41] = (byte) output; //41 输出端口
-        dataBytes[42] = (byte) 0; //data相位
+        dataBytes[42] = (byte) 1; //data相位
         dataBytes[43] = (byte) 0;  //oe
 
         int brightness=0;

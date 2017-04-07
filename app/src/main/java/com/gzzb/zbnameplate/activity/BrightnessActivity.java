@@ -1,5 +1,6 @@
 package com.gzzb.zbnameplate.activity;
 
+import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -8,6 +9,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -20,12 +22,19 @@ import com.gzzb.zbnameplate.dao.DeviceDao;
 import com.gzzb.zbnameplate.global.Global;
 import com.gzzb.zbnameplate.utils.connect.SendBrightnessUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.gzzb.zbnameplate.global.Global.GENFILE_DONE;
 
-public class BrightnessActivity extends BaseWifiActivity implements Listener.OnProgressChangedListener,Listener.OnPlayClickListener{
+public class BrightnessActivity extends BaseWifiActivity implements Listener.OnProgressChangedListener, Listener.OnPlayClickListener {
 
+    @BindView(R.id.rl_brightness_tips)
+    RelativeLayout mRlBrightnessTips;
     private List<Device> mDeviceList;
     private BrightnessAdapter mAdapter;
     private Device mDevice;
@@ -37,6 +46,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brightness);
+        ButterKnife.bind(this);
         initView();
     }
 
@@ -45,7 +55,13 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDeviceDao = ((App) getApplication()).getDaoSession().getDeviceDao();
         mDeviceList = mDeviceDao.queryBuilder().list();
-        mAdapter = new BrightnessAdapter(this,mDeviceList);
+        if (mDeviceList.size()==0) {
+            mRlBrightnessTips.setVisibility(View.VISIBLE);
+        }else {
+            mRlBrightnessTips.setVisibility(View.GONE);
+        }
+        mAdapter = new BrightnessAdapter(this, mDeviceList);
+        onScanAvailable(null);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setProgressChangedListener(this);
         mAdapter.setOnPlayClickListener(this);
@@ -53,7 +69,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
 
     @Override
     protected void onUpdateNetworkInfo(NetworkInfo networkInfo) {
-        if (networkInfo != null&&mDevice!=null) {
+        if (networkInfo != null && mDevice != null) {
             if (networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
                 mDevice.setState("已连接");
                 if (mNeedSend) {
@@ -79,7 +95,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
 
     @Override
     protected void onSendDone() {
-        Toast.makeText(this, mDevice.getDeviceName()+" 已发送", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, mDevice.getDeviceName() + " 已发送", Toast.LENGTH_SHORT).show();
         mDevice.setState("已发送");
         mAdapter.notifyItemChanged(mPosition);
     }
@@ -87,7 +103,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
     @Override
     protected void onGenFileDone(Message msg) {
 
-        SendBrightnessUtil brightnessUtil=new SendBrightnessUtil(this,mHandler,mDevice.getBrightness());
+        SendBrightnessUtil brightnessUtil = new SendBrightnessUtil(this, mHandler, mDevice.getBrightness());
         brightnessUtil.startSendData();
     }
 
@@ -98,42 +114,44 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
 
     @Override
     protected void onScanAvailable(Message msg) {
-//        List<ScanResult> wifiList = mWifiAdmin.getWifiList();
-//        for (ScanResult scanResult : wifiList) {
-//            boolean startFlag = scanResult.SSID.startsWith("HC-LED[");
-//            boolean endFlag = scanResult.SSID.endsWith("]");
-//            if (startFlag&&endFlag){
-//                mWifiList.add(scanResult);
-//            }
-//        }
-//
-//        for (ScanResult wifi : mWifiList) {
-//            int i=0;
-//            for (Device device : mDeviceList) {
-//                if (device.getSsid().equals(wifi.SSID)) {
-//                    device.setOnline(true);
-//                    break;
-//                }
-//            }
-//        }
+        List<ScanResult> scanList = new ArrayList<>();
+        for (ScanResult scanResult : mWifiAdmin.startScan()) {
+            boolean startFlag = scanResult.SSID.startsWith(Global.SSID_START);
+            boolean endFlag = scanResult.SSID.endsWith(Global.SSID_END);
+            if (startFlag && endFlag) {
+                scanList.add(scanResult);
+            }
+        }
+        for (Device device : mDeviceList) {
+            device.setOnline(false);
+        }
 
+        for (ScanResult wifi : scanList) {
+            for (Device device : mDeviceList) {
+                if (device.getSsid().equals(wifi.SSID)) {
+                    device.setOnline(true);
+                    break;
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onPauseFail() {
-        Toast.makeText(this, mDevice.getDeviceName()+" 暂停失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, mDevice.getDeviceName() + " 暂停失败", Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onConnectNoRespone(Message msg) {
-        Toast.makeText(this, mDevice.getDeviceName()+" 发送失败", Toast.LENGTH_SHORT).show();
-        mDevice.setState("发送失败");
+        Toast.makeText(this, mDevice.getDeviceName() + " 发送失败,请重试", Toast.LENGTH_LONG).show();
+        mDevice.setState("请重试");
         mAdapter.notifyItemChanged(mPosition);
     }
 
     @Override
     protected void onWiFiErro(Message msg) {
-        Toast.makeText(this, mDevice.getDeviceName()+" 不在线", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, mDevice.getDeviceName() + " 不在线", Toast.LENGTH_LONG).show();
         mDevice.setState("未启动");
         mAdapter.notifyItemChanged(mPosition);
     }
@@ -141,11 +159,11 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
     @Override
     public void onProgressChanged(SeekBar seekBar, int position, int progress) {
         int brightness = 33;
-        if (progress<=33){
+        if (progress <= 33) {
             brightness = 33;
-        }else if (progress>33&&progress<=66){
+        } else if (progress > 33 && progress <= 66) {
             brightness = 66;
-        }else if (progress>66&&progress<=100){
+        } else if (progress > 66 && progress <= 100) {
             brightness = 100;
         }
         mDeviceList.get(position).setBrightness(brightness);
@@ -154,7 +172,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
     @Override
     public void onPlayClick(View view, int position) {
         mDevice = mDeviceList.get(position);
-        mPosition=position;
+        mPosition = position;
         mDevice.setState("准备发送");
 
         if (mWifiAdmin.getWifiInfo().getSSID().equals("\"" + mDevice.getSsid() + "\"")) {
@@ -162,7 +180,7 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
             mHandler.sendEmptyMessageDelayed(GENFILE_DONE, 1000);//1秒后开始发送;
         }
         mAdapter.notifyItemChanged(mPosition);
-        mNeedSend=true;
+        mNeedSend = true;
         connectWifi(position);
     }
 
@@ -191,5 +209,14 @@ public class BrightnessActivity extends BaseWifiActivity implements Listener.OnP
     public void onBackPressed() {
         mDeviceDao.insertOrReplaceInTx(mDeviceList);
         super.onBackPressed();
+    }
+
+    @OnClick(R.id.rl_brightness_tips)
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rl_brightness_tips:
+                startActivity(new Intent(this, DeviceManageActivity.class));
+                break;
+        }
     }
 }

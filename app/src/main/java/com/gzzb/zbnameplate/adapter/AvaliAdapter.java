@@ -43,9 +43,9 @@ public class AvaliAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int pos) {
         final WifiViewHolder viewHolder= (WifiViewHolder) holder;
-
+        final int position=viewHolder.getLayoutPosition();
         viewHolder.tvWifiName.setText(mWifiList.get(position).SSID);
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {

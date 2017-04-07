@@ -3,6 +3,8 @@ package com.gzzb.zbnameplate.adapter;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.gzzb.zbnameplate.bean.Account;
+
 /**
  * Created by Lam on 2017/3/28.
  */
@@ -34,5 +36,12 @@ public class Listener {
 
     public interface OnProgressChangedListener{
         void onProgressChanged(SeekBar seekBar,int position, int progress);
+    }
+
+    public interface OnUpwardListener{
+        void onUpTap(Account account,int position);
+    }
+    public interface OnDownListener{
+        void onDownTap(Account account,int position);
     }
 }

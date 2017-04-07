@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +29,9 @@ import com.gzzb.zbnameplate.bean.NamePlate;
 import com.gzzb.zbnameplate.dao.AccountDao;
 import com.gzzb.zbnameplate.dao.DeviceDao;
 import com.gzzb.zbnameplate.global.Global;
+import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 import com.gzzb.zbnameplate.utils.genfile.DrawBitmapUtil;
 import com.gzzb.zbnameplate.utils.genfile.GenFileUtil;
-import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 import com.gzzb.zbnameplate.utils.system.WifiAdmin;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import static com.gzzb.zbnameplate.global.Global.PREPARE_FILE;
 public class MultiSendActivity extends BaseWifiActivity implements Listener.OnItemClickListener, Listener.OnPlayClickListener, View.OnClickListener {
 
     private static final int REQUEST_ACCOUNT_SELECT = 778;
+    private static final int SORT_CODE = 665;
     @BindView(R.id.tv_sendName)
     TextView mTvSendName;
     @BindView(R.id.iv_sendWifi)
@@ -68,6 +70,8 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     FloatingActionButton mFabSend;
     @BindView(R.id.fab_send_sort)
     FloatingActionButton mFabSort;
+    @BindView(R.id.rv_multisend_tips)
+    RelativeLayout mRlTips;
 
     private WifiAdmin mWifiAdmin;
     private List<NamePlate> mNamePlateList;
@@ -83,6 +87,7 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     private boolean isSendAll;
     private int mPositionClick;
     private List<Account> mAccountList;
+    private AccountDao mAccountDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +104,22 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         mWifiList = new ArrayList<>();
         mNamePlateList = new ArrayList<>();
         mOriginalNameplates = new ArrayList<>();
-        AccountDao accountDao = ((App) getApplication()).getDaoSession().getAccountDao();
+        mAccountDao = ((App) getApplication()).getDaoSession().getAccountDao();
         DeviceDao deviceDao = ((App) getApplication()).getDaoSession().getDeviceDao();
-        mAccountList = accountDao.queryBuilder().list();
+        mAccountList = mAccountDao.queryBuilder().list();
         List<Device> devices = deviceDao.queryBuilder().list();
+        if (devices.size()==0) {
+            mRlTips.setVisibility(View.VISIBLE);
+        }else {
+            mRlTips.setVisibility(View.GONE);
+        }
+        int size = mAccountList.size();
+        for (int i = 0; i < devices.size() - size; i++) {
+            Account account = new Account();
+            account.setAccountName("");
+            mAccountList.add(account);
+        }
+
         int i = 0;
         for (Device device : devices) {
             Account account = mAccountList.get(i);
@@ -111,9 +128,6 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
             i++;
         }
         mOriginalNameplates.addAll(mNamePlateList);
-//        mNamePlateList.addAll(mOriginalNameplates);
-//        mNamePlateList.addAll(mOriginalNameplates);
-//        mNamePlateList.addAll(mOriginalNameplates);
         List<ScanResult> scanResults = mWifiAdmin.startScan();
         for (ScanResult scanResult : scanResults) {
             boolean startFlag = scanResult.SSID.startsWith(Global.SSID_START);
@@ -128,6 +142,7 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         mCvSend.setVisibility(View.GONE);
         mAdapter = new SendAdapter(this, mNamePlateList);
         mSendRcv.setLayoutManager(new LinearLayoutManager(this));
+        onScanAvailable(null);
         mSendRcv.setAdapter(mAdapter);
         mAdapter.setItemOnClickListener(this);
         mAdapter.setOnPlayClickListener(this);
@@ -166,7 +181,28 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
 
     @Override
     protected void onScanAvailable(Message msg) {
+        List<ScanResult> scanList=new ArrayList<>();
+        List<ScanResult> wifiList = mWifiAdmin.startScan();
+        for (ScanResult scanResult : wifiList) {
+            boolean startFlag = scanResult.SSID.startsWith("HC-LED[");
+            boolean endFlag = scanResult.SSID.endsWith("]");
+            if (startFlag&&endFlag){
+                scanList.add(scanResult);
+            }
+        }
+        for (NamePlate namePlate : mNamePlateList) {
+            namePlate.getDevice().setOnline(false);
+        }
 
+        for (ScanResult wifi : scanList) {
+            for (NamePlate namePlate : mNamePlateList) {
+                if (namePlate.getDevice().getSsid().equals(wifi.SSID)) {
+                    namePlate.getDevice().setOnline(true);
+                    break;
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -176,17 +212,14 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
 
     @Override
     protected void onWiFiErro(Message msg) {
-        retryTime = 4;
+//        retryTime = 4;
         onSendFail();
-        Toast.makeText(MultiSendActivity.this, "铭牌不在线,请启动铭牌", Toast.LENGTH_LONG).show();
+//        Toast.makeText(MultiSendActivity.this, "铭牌不在线,请启动铭牌", Toast.LENGTH_LONG).show();
     }
 
     @Override   //生成文件
     protected void onPrepareFile(Message msg) {
-        DrawBitmapUtil drawBitmapUtil = new DrawBitmapUtil(mAccount.getAccountName());
-        drawBitmapUtil.setItalic(mAccount.getIsItalic());
-        drawBitmapUtil.setBold(mAccount.getIsBold());
-        drawBitmapUtil.setUnderline(mAccount.getIsUnderline());
+        DrawBitmapUtil drawBitmapUtil = new DrawBitmapUtil(this,mAccount);
         Bitmap bitmap = drawBitmapUtil.drawBitmap();
         GenFileUtil genFileUtil = new GenFileUtil(this, bitmap, mHandler);
         genFileUtil.startGenFile();
@@ -204,6 +237,14 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
 
     @Override   //开始发送
     protected void onGenFileDone(Message msg) {
+
+        if (!mDevice.getIsOnline()){
+            retryTime=4;
+            Snackbar.make(mSendRcv,mDevice.getDeviceName()+"不在线",Snackbar.LENGTH_SHORT).show();
+            onSendFail();
+            return;
+        }
+
         SendDataUtil sendDataUtil = new SendDataUtil(this, mHandler);
         sendDataUtil.send();
         mTvSendTip.setText("开始发送");
@@ -278,7 +319,7 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         // TODO: 2017/3/28 发送失败的原因,是因为在主界面的时候一连接到WiFi的时候自动发送test指令,在那时候就已经创立了一个tcp,如果再次又发送的话就起了冲突.所以造成发送失败
         //发送失败,重试几次
         retryTime++;
-        if ((retryTime < 4)) {
+        if (retryTime < 4) {
             switch (retryTime) {
                 case 1:
                     Snackbar.make(mSendRcv, "WiFi异常,将于5秒后自动重试", Snackbar.LENGTH_SHORT).show();
@@ -312,6 +353,11 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
 
     @Override
     public void onPlayClick(View view, int position) {
+        boolean isOnline = mNamePlateList.get(position).getDevice().getIsOnline();
+        if (!isOnline) {
+            Snackbar.make(mSendRcv,mNamePlateList.get(position).getDevice().getDeviceName()+"不在线",Snackbar.LENGTH_SHORT).show();
+            return;
+        }
         isSendAll = false;
         mCvSend.setVisibility(View.VISIBLE);
         if (mTvSendTip.getVisibility() != View.VISIBLE) {
@@ -323,7 +369,6 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         connectWifi(position);
         mNamePlateList.remove(position);
         mAdapter.notifyItemRemoved(position);
-
         mTvSendName.setText(mAccount.getAccountName());
         mTvSendDevice.setText(mDevice.getDeviceName());
         mTvSendWifi.setText(mDevice.getSsid());
@@ -337,13 +382,16 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_send_send:
-                if (mNamePlateList.size()>=0){
+                if (mNamePlateList.size()>0){
                     sendByStep(0);
                     isSendAll = true;
+                }else {
+                    Snackbar.make(mSendRcv,"请先添加桌牌设备",Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.fab_send_sort:
-
+                Intent intent = new Intent(this, SortActivity.class);
+                startActivityForResult(intent,SORT_CODE);
                 break;
         }
     }
@@ -358,6 +406,12 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
                     break;
                 }
             }
+        }else if (resultCode == RESULT_OK && requestCode == SORT_CODE){
+            List<Account> list = mAccountDao.queryBuilder().where(AccountDao.Properties.SortNumber.notEq(1000)).list();
+            for (Account account : list) {
+                mNamePlateList.get(account.getSortNumber()).setAccount(account);
+            }
+            mAdapter.notifyDataSetChanged();
         }
     }
 

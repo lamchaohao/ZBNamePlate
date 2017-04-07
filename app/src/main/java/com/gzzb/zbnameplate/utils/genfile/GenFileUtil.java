@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
+import com.gzzb.zbnameplate.global.Global;
 import com.gzzb.zbnameplate.utils.connect.SendDataUtil;
 
 import java.io.File;
@@ -40,10 +41,12 @@ public class GenFileUtil {
     private int mScreenHeight=16;
 
     private Handler mHandler;
+    private final boolean mIsMoveLeft;
 
     public GenFileUtil(Context context, Bitmap bitmap,Handler handler) {
         mContext = context;
         mBitmap = bitmap;
+        mIsMoveLeft = context.getSharedPreferences(Global.SP_SYSTEM, Context.MODE_PRIVATE).getBoolean(Global.KEY_MOVE_Effect, false);
         if (handler!=null) {
             mHandler = handler;
         }else {
@@ -110,8 +113,13 @@ public class GenFileUtil {
             mFrameCount= 1;
             frameCountByte = intToByteArray(mFrameCount, 2);
         }else {
-            mFrameCount=mFrameCount*2;
-            frameCountByte = intToByteArray(mFrameCount+16, 2);//到最后的时候停留一下
+            if (mIsMoveLeft){
+//                mFrameCount+=3;
+                frameCountByte = intToByteArray(mFrameCount, 2);//到最后的时候停留10帧
+            }else {
+                mFrameCount=mFrameCount*2;
+                frameCountByte = intToByteArray(mFrameCount+16, 2);//到最后的时候停留一下
+            }
         }
 
         setInbyteArray(1,frameCountByte,mItemPart);
@@ -140,7 +148,52 @@ public class GenFileUtil {
         if (mFrameCount==1){
             initOneFrame();
         }else {
-            initMoreFrame();
+            if (mIsMoveLeft) {
+                initLeftMove();
+            }else
+                initMoreFrame();
+        }
+    }
+
+    private void initLeftMove() {
+        //文字属性地址 3byte
+        int attrStartAddress=mFileHeadPart.length+mItemPart.length;
+        //文字地址
+        int textContentAddressInt=mFileHeadPart.length+mItemPart.length+mTextAttrs.length+mBlackBG.length;
+        picStyle= 1;//1BIT地址指向(0=图层,1=跳转地址),7BIT未用
+        int tempColbyteCount=0;
+
+        int loopCount = mFrameCount;
+        for (int i = 0; i<loopCount; i++) {
+            byte[] timeAxis = new byte[16];
+            //时间
+            timeAxis[0] = 60;
+            timeAxis[1] = picStyle;
+            //字属性地址
+            int tempTextAddress = 0;
+            //字内容地址 4byte
+            if (i == 0) {
+                tempColbyteCount = 0;
+            } else {
+                tempColbyteCount += mColByteCount[i - 1];
+            }
+            tempTextAddress = textContentAddressInt + tempColbyteCount;
+
+            byte[] picAddress = intToByteArray(textContentAddressInt - mBlackBG.length, 4);//当方式为跳向指定帧时这个地址是指向时间轴上的一个时间点(头0开始)
+            byte[] atrrAddress = intToByteArray(attrStartAddress, 3);
+            byte[] textContentAddress = intToByteArray(tempTextAddress, 4);
+            byte[] clockOrTem = new byte[3];
+
+            setInbyteArray(2, picAddress, timeAxis);
+            setInbyteArray(6, atrrAddress, timeAxis);
+            setInbyteArray(9, textContentAddress, timeAxis);
+            setInbyteArray(13, clockOrTem, timeAxis);
+            mTimeAxisList.add(timeAxis);
+            if (i==loopCount-1){
+                for (int j = 0; j < mFrameCount - loopCount; j++) {
+                    mTimeAxisList.add(timeAxis);
+                }
+            }
         }
     }
 

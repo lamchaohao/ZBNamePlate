@@ -1,44 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:textSize="18sp"
-        android:text="字体效果："
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <LinearLayout
-        style="@style/TextEditIconLayout"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/ib_fgText_setBold"
-            style="@style/TextEditIcon"
-            android:layout_weight="1"
-            android:src="@drawable/ic_format_bold_black_48dp"
-            android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:textSize="18sp"
+            android:text="字体选择："
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/bt_fgText_font"
+            android:layout_weight="1"
+            android:text="字体"
+            android:layout_margin="10dp"
+            style="@style/TextEditIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            android:text="字体效果："
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            style="@style/TextEditIconLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_fgText_setBold"
+                style="@style/TextEditIcon"
+                android:layout_weight="1"
+                android:src="@drawable/ic_format_bold_black_48dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
 
-        <ImageButton
-            style="@style/TextEditIcon"
-            android:id="@+id/ib_fgText_setItalic"
-            android:layout_weight="1"
-            android:src="@drawable/ic_format_italic_black_48dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                style="@style/TextEditIcon"
+                android:id="@+id/ib_fgText_setItalic"
+                android:layout_weight="1"
+                android:src="@drawable/ic_format_italic_black_48dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
 
-        <ImageButton
-            style="@style/TextEditIcon"
-            android:id="@+id/ib_fgText_setUnderLine"
-            android:layout_weight="1"
-            android:text="Font"
-            android:fontFamily="sans-serif"
-            android:src="@drawable/ic_format_underlined_black_48dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                style="@style/TextEditIcon"
+                android:id="@+id/ib_fgText_setUnderLine"
+                android:layout_weight="1"
+                android:text="Font"
+                android:fontFamily="sans-serif"
+                android:src="@drawable/ic_format_underlined_black_48dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/bt_send"
+            android:text="发送"
+            android:layout_margin="10dp"
+            android:background="@drawable/sendbutton_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

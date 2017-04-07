@@ -49,8 +49,9 @@ public class AccountAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int pos) {
         AccountViewHolder viewHolder= (AccountViewHolder) holder;
+        final int position=viewHolder.getLayoutPosition();
         viewHolder.tvName.setText(mAccountList.get(position).getAccountName());
         //是否选择删除
         if (isMutilChoiceMode){

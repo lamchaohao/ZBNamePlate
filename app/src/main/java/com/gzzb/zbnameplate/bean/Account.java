@@ -1,8 +1,11 @@
 package com.gzzb.zbnameplate.bean;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+
+import java.io.File;
 
 /**
  * Created by Lam on 2017/3/12.
@@ -16,26 +19,21 @@ public class Account {
     private boolean isBold;
     private boolean isItalic;
     private boolean isUnderline;
-    @Generated(hash = 1673776996)
+    @Convert(converter = FileConverter.class,columnType = String.class)
+    private File typeface;
+    @Generated(hash = 770264233)
     public Account(long id, int sortNumber, String accountName, boolean isBold,
-            boolean isItalic, boolean isUnderline) {
+            boolean isItalic, boolean isUnderline, File typeface) {
         this.id = id;
         this.sortNumber = sortNumber;
         this.accountName = accountName;
         this.isBold = isBold;
         this.isItalic = isItalic;
         this.isUnderline = isUnderline;
+        this.typeface = typeface;
     }
     @Generated(hash = 882125521)
     public Account() {
-    }
-    public Account(Account account) {
-        this.id = account.getId();
-        this.sortNumber = account.getSortNumber();
-        this.accountName = account.getAccountName();
-        this.isBold = account.getIsBold();
-        this.isItalic = account.getIsItalic();
-        this.isUnderline = account.getIsUnderline();
     }
     public long getId() {
         return this.id;
@@ -73,5 +71,12 @@ public class Account {
     public void setIsUnderline(boolean isUnderline) {
         this.isUnderline = isUnderline;
     }
+    public File getTypeface() {
+        return this.typeface;
+    }
+    public void setTypeface(File typeface) {
+        this.typeface = typeface;
+    }
+    
    
 }

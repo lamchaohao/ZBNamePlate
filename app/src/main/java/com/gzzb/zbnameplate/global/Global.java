@@ -11,6 +11,7 @@ public class Global {
     public static final String EXTRA_NETWORKSTATE="network_state";
     public static final String EX_NEW_NAME="newName";
     public static final String EX_ACCOUNT_ID="accountID";
+    public static final String EX_setelctFont="selectFont";
 
     public static final String DAO_ENCRYPT = "account-db-encrypted";
     public static final String DAO_DATABASENAME = "account-db";
@@ -20,9 +21,14 @@ public class Global {
     public static final String SSID_START="HC-LED[";
     public static final String SSID_END="]";
 
+    public static final String SP_SYSTEM="config";
+    public static final String KEY_MOVE_Effect = "move_effect";
+    public static final String KEY_DOWNLOAD_ID="downloadId";
+
     public static final String FL_QQFILE="/Tencent/QQfile_recv";
     public static final String FL_WECHAT="/Tencent/MicroMsg/Download";
-
+    public static final String FL_SYSTEMFONT="/system/fonts";
+    public static final String FL_FONTS_FOLDER="/fonts/zbFonts";
 
     public static final int READ_SUCCESS = 200;
     public static final int SEND_DONE = 201;
@@ -50,6 +56,7 @@ public class Global {
     public static final int RESUME_OK = 13202;
     public static final int RESET_OK = 13203;
     public static final int FILE_ILLEGAL = 13400;
+    public static final int View_Cool=1499;
 
 
 }

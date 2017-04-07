@@ -29,15 +29,6 @@
             android:layout_height="70dp" />
     </FrameLayout>
     <include layout="@layout/content_text_setting"/>
-    <Button
-        android:id="@+id/bt_send"
-        android:text="发送"
-        android:layout_margin="10dp"
-        android:background="@drawable/button_bg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
 
 
 </LinearLayout>
