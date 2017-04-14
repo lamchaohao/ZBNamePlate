@@ -1,6 +1,30 @@
 <resources>
     <string name="app_name">无线桌牌</string>
-
+    <string name="fromQQ">从QQ文件目录</string>
+    <string name="fromWechat">从微信文件目录</string>
+    <string name="fromOther">其他目录</string>
+    <string name="switchDecoder">切换编码</string>
+    <string name="addDevicesTip">你暂时没有设备,请在桌牌管理页面添加</string>
+    <string name="searchNone">没有搜索到可用设备</string>
+    <string name="leftToView">左划查看可添加设备</string>
+    <string name="tapTocheck">点击查找</string>
+    <string name="connectState">连接说明</string>
+    <string name="statePart1">1.系统为6.0或以上，第一次连接请点击WLAN连接</string>
+    <string name="statePart2">2.如果连接不成功，请点击WLAN连接</string>
+    <string name="statePart3">3.Wi-Fi密码为:12345678</string>
+    <string name="wlan">WLAN连接</string>
+    <string name="gotIt">我知道了</string>
+    <string name="detectResult">检测到桌牌数量:</string>
+    <string name="inputHint">请输入名字</string>
+    <string name="selectFont_edit">字体选择:</string>
+    <string name="font_edit">字体</string>
+    <string name="textEffect">文字效果:</string>
+    <string name="edit">编辑</string>
+    <string name="connectWifi">连接</string>
+    <string name="setting">设置</string>
+    <string name="sendAll">全部发送</string>
+    <string name="sort">排序</string>
+    
     <string name="test">通信</string>
     <string name="reset">重置</string>
     <string name="pause">暂停</string>
@@ -11,9 +35,125 @@
     <string name="resumeSuccess">恢复成功</string>
     <string name="resetSuccess">重置成功</string>
     <string name="tos_wifi_switch">所连接WiFi非本公司产品，请切换WiFi</string>
+    <string name="tos_enable_wifi">未开启Wi-Fi,请开启</string>
     <string name="tos_wifi_timeout">连接超时，请重试</string>
     <string name="refuse_connect">拒绝服务</string>
-    <string name="title_activity_base_wifi">无线铭牌</string>
-    <string name="title_activity_sort">无线铭牌</string>
 
+    <string name="newName">新建</string>
+    <string name="deletedSelect">所选已删除</string>
+    <string name="editContent">修改内容</string>
+    <string name="comfirm">确定</string>
+    <string name="cancle">取消</string>
+    <string name="delete">删除</string>
+    <string name="deleted">已删除</string>
+    <string name="deletd_all_comfirm">你确定要删除全部吗?</string>
+    <string name="delete_all">删除全部</string>
+    <string name="delete_all_success">已删除所有内容</string>
+    <string name="checkUpdate">检查更新</string>
+    <string name="about">关于</string>
+    <string name="foundUpdate">发现新版本</string>
+    <string name="update">赶紧升级</string>
+    <string name="updateName">无线桌牌新版本</string>
+    <string name="ignore">忽略</string>
+    <string name="version">版本</string>
+    <string name="website">官网</string>
+    <string name="web_url">www.gzz100.com</string>
+    <string name="noSupportDocm">无法读取文件,暂只支持纯文本文档，如.txt</string>
+    <string name="add">添加</string>
+    <string name="read_record">读取记录:</string>
+    <string name="selectEffectForLongtext">文字过长显示效果:</string>
+    <string name="leftMove">左移</string>
+    <string name="leftAndRight">先左移后右移</string>
+
+    <string name="tos_alreadySend">已经在发送</string>
+    <string name="tos_wifiErro">所连接WiFi非本公司产品，请切换WiFi</string>
+    <string name="tos_connectTimeout">连接超时，请重试</string>
+    <string name="tos_connectNoRespond">无响应，请稍后重试</string>
+    <string name="tos_isLatest">你的版本已是最新版</string>
+    <string name="tos_update">开始下载更新</string>
+    <string name="tos_added">已添加</string>
+    <string name="tos_addedNone">添加0条记录</string>
+    <string name="tos_sendAll_done">全部发送完毕</string>
+    <string name="tos_retry5">WiFi异常,将于5秒后自动重试</string>
+    <string name="tos_retry3">WiFi异常,将于3秒后自动重试</string>
+    <string name="tos_retrytime">次重试</string>
+    <string name="tos_addFirst">请先添加桌牌设备</string>
+    <string name="tos_needPermission">需要权限才能检测桌牌,请开启定位权限</string>
+    
+    <string name="prepareFile">准备文件</string>
+    <string name="connecting">正在连接</string>
+    <string name="connected">已连接</string>
+    <string name="disconnecting">正在断开</string>
+    <string name="disconnected">已断开</string>
+    <string name="connectedTo">已连接到</string>
+    <string name="checking">正在查找</string>
+    <string name="startSend">开始发送</string>
+    <string name="sending">正在发送</string>
+    <string name="send">发送</string>
+    <string name="sent">已发送</string>
+    <string name="sent_success">发送成功</string>
+    <string name="sent_fail">发送失败</string>
+    <string name="pauseFail">暂停失败</string>
+    <string name="pauseFailAndRetry">发送失败,请重试</string>
+    <string name="retry">请重试</string>
+    <string name="start_try">准备重试</string>
+    <string name="offLine">不在线</string>
+    <string name="readySend">准备发送</string>
+    <string name="brightness">屏幕亮度</string>
+    <string name="connect">通信</string>
+    <string name="devices">设备</string>
+    <string name="avaliable">可添加</string>
+    <string name="addedToMyDevices">已添加到我的设备</string>
+    <string name="edit_deviceName">修改设备名称</string>
+    <string name="edit_deviceHint">请输入设备名称</string>
+    <string name="delete_devices">删除设备</string>
+    <string name="comfirmDeleted">确定要删除</string>
+    <string name="deviceManage">桌牌管理</string>
+    <string name="selectAccount">选择内容</string>
+    <string name="selectEffect">效果设置</string>
+    <string name="selectFont">选择字体</string>
+
+
+    <string name="use_help">使用帮助</string>
+    <string name="help_part1">
+         1.	无法连接铭牌?\n请检查铭牌是否正常工作.铭牌的Wi-Fi的默认密码为12345678.\n
+    </string>
+    <string name="help_part2">
+         2.	APP中无法查看铭牌Wi-Fi?\n
+        检查桌牌是否启动.若已启动,检查是否开启权限.\n
+        打开系统设置-应用-无线铭牌-权限管理-允许使用定位权限;允许使用开启Wi-Fi权限\n
+    </string>
+    <string name="help_part3">
+        3.	铭牌无显示?\n
+    确认铭牌开关是否启动.如未启动则启动.\n
+    如已启动,检查电池是否电量低.请插入电源线进行充电.\n
+    如电量良好,则可进入无线铭牌APP连接并发送内容.\n
+    </string>
+    <string name="help_part4">
+     4.	APP无法运行?\n
+    进入手机系统设置-应用-无线铭牌-清除数据.\n
+    重新下载APP安装\n
+    </string>
+    <string name="help_part5">
+    5.	发送内容失败?\n
+    请检查当前连接的Wi-Fi是否属于无线铭牌的Wi-Fi,如果不是,请将Wi-Fi连接到铭牌,然后重试发送内容.\n
+    </string>
+    <string name="help_part6">
+   6.	内容发送成功,屏幕无显示最新内容?\n
+    请检查手机所连接的Wi-Fi是否为需要发送内容的铭牌的Wi-Fi?\n
+    </string>
+    <string name="help_part7">
+    7.	铭牌无响应\n
+    若在发送内容或者调节亮度过程中有此提示,请将铭牌重新启动,再次连接并发送即可.\n
+    请检查是否有多台手机或PC连接到同一铭牌,请尽量使用一台设备进行连接并发送.\n
+    </string>
+    <string name="help_part8">
+   8.	如何添加字体?\n
+	将字体文件添加到如下目录中:存储设备/fonts/zbFonts.\n
+    </string>
+     <string name="help_part9">
+    9.	批量添加内容时候字体乱码?\n
+    可以点击屏幕上的切换编码.如果仍未解决问题,请将txt文件保存为GBK或者UTF-8编码.\n
+    目前批量添加只支持txt文件,以换行符为间隔.一行文字代表一处内容.\n
+    </string>
 </resources>

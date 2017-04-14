@@ -2,13 +2,13 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.gzzb.zbnameplate.fragment.DevicesFragment">
+             tools:context="com.gzzb.nameplate.fragment.DevicesFragment">
     <RelativeLayout
         android:id="@+id/rv_devices_tips"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:text="左划查看可添加设备"
+            android:text="@string/leftToView"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:gravity="center"

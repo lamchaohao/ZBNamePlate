@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzzb.zbnameplate.activity.MainActivity">
+    tools:context=".activity.MainActivity">
 
-    <com.gzzb.zbnameplate.view.photoView.PhotoView
+    <com.gzz100.nameplate.view.photoView.PhotoView
         android:id="@+id/iv_preview"
         android:background="#EEEEEE"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         <EditText
             android:id="@+id/et_nameEdit"
             android:layout_margin="3dp"
-            android:hint="请输入名字"
+            android:hint="@string/inputHint"
             android:gravity="left"
             android:background="#FFFFFF"
             android:layout_width="match_parent"

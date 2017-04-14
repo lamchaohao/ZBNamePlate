@@ -3,37 +3,37 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
               android:orientation="vertical"
-             tools:context="com.gzzb.zbnameplate.fragment.SettingFragment">
+             tools:context="com.gzzb.nameplate.fragment.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/tvSetConfig"
         android:drawableLeft="@drawable/ic_blur_linear_yellow_900_36dp"
         style="@style/MainFragGuideText"
-        android:text="效果设置"/>
+        android:text="@string/selectEffect"/>
 
     <TextView
         android:id="@+id/tvSetBrightness"
         android:drawableLeft="@drawable/ic_settings_brightness_green_a700_36dp"
         style="@style/MainFragGuideText"
-        android:text="屏幕亮度"/>
+        android:text="@string/brightness"/>
 
     <TextView
         android:id="@+id/tvSetDevice"
         android:drawableLeft="@drawable/ic_tap_and_play_blue_700_36dp"
         style="@style/MainFragGuideText"
-        android:text="桌牌管理"/>
+        android:text="@string/deviceManage"/>
 
     <TextView
         android:id="@+id/tvSetConnect"
         android:drawableLeft="@drawable/ic_mail_purple_400_36dp"
         style="@style/MainFragGuideText"
-        android:text="通信"/>
+        android:text="@string/connect"/>
 
     <TextView
         android:id="@+id/tvSetAbout"
         android:drawableLeft="@drawable/ic_copyright_teal_500_36dp"
         style="@style/MainFragGuideText"
-        android:text="关于"/>
+        android:text="@string/about"/>
 
 </LinearLayout>

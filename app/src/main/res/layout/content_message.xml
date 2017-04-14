@@ -12,7 +12,6 @@
         <TextView
             android:layout_marginTop="20dp"
             android:id="@+id/tv_server"
-            android:text="hello"
             android:padding="10dp"
             android:gravity="center"
             android:textColor="@color/textPrimary"
@@ -31,7 +30,6 @@
             android:background="#2196F3"
             android:textSize="18sp"
             android:textColor="@color/textPrimary"
-            android:text="how are you"
             android:gravity="center"
             android:padding="10dp"
             android:layout_width="wrap_content"

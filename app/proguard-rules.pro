@@ -16,20 +16,15 @@
 #   public *;
 #}
 #---------------------------------1.实体类---------------------------------
--keep public class * extends android.app.Fragment
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class com.gzzb.zbnameplate.global.** { *; }
 #不混淆R类里及其所有内部static类中的所有static变量字段
+-keep class com.gzz100.nameplate.bean.** { *; }
+-keep class com.gzz100.nameplate.dao.** { *; }
 -keepclassmembers class **.R$* {
     public static <fields>;
 }
--keep class com.gzzb.zbnameplate.bean.** { *; }
--keep class com.gzzb.zbnameplate.dao.** { *; }
 #-------------------------------------------------------------------------
 
 #---------------------------------2.第三方包-------------------------------
-
 #//不提示兼容库的错误警告
 -dontwarn android.support.**
 # greendao

@@ -5,34 +5,20 @@
     android:id="@+id/activity_brightness"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gzzb.zbnameplate.activity.BrightnessActivity">
+    tools:context=".activity.BrightnessActivity">
     <RelativeLayout
         android:id="@+id/rl_brightness_tips"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+        <TextView
             android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:text="你暂时没有设备,请在桌牌管理页面添加"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:text="点此进入"
-                android:gravity="center"
-                android:drawableRight="@drawable/ic_add_circle_green_a700_36dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:drawableRight="@drawable/ic_add_circle_green_a700_36dp"
+            android:text="@string/addDevicesTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

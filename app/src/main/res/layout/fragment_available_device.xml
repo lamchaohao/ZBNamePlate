@@ -1,14 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.gzzb.zbnameplate.fragment.AvailableDeviceFragment">
+             android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/rv_avail_tips"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:text="没有搜索到可用设备"
+            android:text="@string/searchNone"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:gravity="center"

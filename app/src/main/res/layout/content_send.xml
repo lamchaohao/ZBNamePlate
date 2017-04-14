@@ -39,7 +39,6 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_sendDevice"
-                    android:text="第一排第一个"
                     android:ellipsize="marquee"
                     android:textColor="@color/textPrimary"
                     android:textSize="18sp"
@@ -49,7 +48,6 @@
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/tv_sendWifi"
-                    android:text="HC-LED[309a81]"
                     android:maxLines="1"
                     android:textSize="14sp"
                     android:gravity="center|left"
@@ -68,14 +66,12 @@
                     android:textColor="@color/textPrimary"
                     android:gravity="center"
                     android:ellipsize="marquee"
-                    android:text="@string/app_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/tv_sendState"
                     android:textColor="@color/colorAccent"
                     android:gravity="center"
-                    android:text="已发送"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

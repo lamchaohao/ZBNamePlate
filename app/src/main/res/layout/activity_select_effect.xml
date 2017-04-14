@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzzb.zbnameplate.activity.SelectEffectActivity">
+    tools:context=".activity.SelectEffectActivity">
     <TextView
         android:textSize="18sp"
         android:layout_margin="8dp"
-        android:text="文字过长显示效果:"
+        android:text="@string/selectEffectForLongtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <RadioGroup
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content">
         <RadioButton
             android:id="@+id/rb_effect_leftmove"
-            android:text="左移"
+            android:text="@string/leftMove"
             android:textSize="18sp"
             android:padding="8dp"
             android:background="@drawable/recycler_bg"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"/>
         <RadioButton
             android:id="@+id/rb_effect_leftandrRight"
-            android:text="先左移后右移"
+            android:text="@string/leftAndRight"
             android:textSize="18sp"
             android:padding="8dp"
             android:layout_marginTop="8dp"
