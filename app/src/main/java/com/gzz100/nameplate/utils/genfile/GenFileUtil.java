@@ -1,6 +1,7 @@
 package com.gzz100.nameplate.utils.genfile;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
@@ -42,11 +43,15 @@ public class GenFileUtil {
 
     private Handler mHandler;
     private final boolean mIsMoveLeft;
+    private int mSpeed;
 
     public GenFileUtil(Context context, Bitmap bitmap,Handler handler) {
         mContext = context;
         mBitmap = bitmap;
-        mIsMoveLeft = context.getSharedPreferences(Global.SP_SYSTEM, Context.MODE_PRIVATE).getBoolean(Global.KEY_MOVE_Effect, false);
+        SharedPreferences sp = context.getSharedPreferences(Global.SP_SYSTEM, Context.MODE_PRIVATE);
+        mIsMoveLeft = sp.getBoolean(Global.KEY_MOVE_Effect, false);
+        mSpeed = sp.getInt(Global.KEY_MOVE_SPEED, 40);
+        mSpeed+=20;
         if (handler!=null) {
             mHandler = handler;
         }else {
@@ -167,7 +172,7 @@ public class GenFileUtil {
         for (int i = 0; i<loopCount; i++) {
             byte[] timeAxis = new byte[16];
             //时间
-            timeAxis[0] = 60;
+            timeAxis[0] = (byte) mSpeed;
             timeAxis[1] = picStyle;
             //字属性地址
             int tempTextAddress = 0;
@@ -208,7 +213,7 @@ public class GenFileUtil {
         for (int i = 0; i<mFrameCount/2; i++){
             byte[] timeAxis=new byte[16];
             //时间
-            timeAxis[0]=60;
+            timeAxis[0]= (byte) mSpeed;
             timeAxis[1] = picStyle;
             //字属性地址
             int tempTextAddress=0;
@@ -241,7 +246,7 @@ public class GenFileUtil {
         for (int i = (mFrameCount/2)-1; i>=0; i--){
             byte[] timeAxis=new byte[16];
             //时间
-            timeAxis[0]=60;
+            timeAxis[0]= (byte) mSpeed;
             timeAxis[1] = picStyle;
             //字属性地址
             int tempTextAddress=0;

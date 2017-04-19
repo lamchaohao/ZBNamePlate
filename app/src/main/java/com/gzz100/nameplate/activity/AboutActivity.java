@@ -60,6 +60,7 @@ public class AboutActivity extends BaseActivity {
     TextView mTvHelp;
     @BindView(R.id.rl_webSite)
     RelativeLayout rlWebsite;
+
     private void showAlertDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.foundUpdate)+mUpdateInfo.version)
@@ -68,7 +69,7 @@ public class AboutActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(AboutActivity.this, R.string.tos_update, Toast.LENGTH_SHORT).show();
-                        UpdateUtil.download(AboutActivity.this, mUpdateInfo.downloadUrl, getString(R.string.updateName));
+                        UpdateUtil.download(AboutActivity.this, mUpdateInfo.downloadUrl, mUpdateInfo.name);
                     }
                 })
                 .setNegativeButton(R.string.ignore, null)

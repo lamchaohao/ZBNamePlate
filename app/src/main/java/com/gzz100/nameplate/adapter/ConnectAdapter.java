@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gzz100.nameplate.R;
@@ -73,7 +73,7 @@ public class ConnectAdapter extends RecyclerView.Adapter {
 
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
-            viewHolder.llItem.setOnClickListener(new View.OnClickListener() {
+            viewHolder.rlItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = viewHolder.getLayoutPosition();
@@ -125,7 +125,7 @@ public class ConnectAdapter extends RecyclerView.Adapter {
         @BindView(R.id.tv_Conn_wifiName)
         TextView tvWifiName;
         @BindView(R.id.ll_Conn_item)
-        LinearLayout llItem;
+        RelativeLayout rlItem;
         @BindView(R.id.iv_Conn_level)
         ImageView ivLevel;
         @BindView(R.id.iv_Conn_check)

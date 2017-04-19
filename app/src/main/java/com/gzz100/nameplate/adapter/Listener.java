@@ -45,4 +45,5 @@ public class Listener {
     public interface OnDownListener{
         void onDownTap(Account account,int position);
     }
+
 }

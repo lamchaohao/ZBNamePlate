@@ -21,6 +21,7 @@ public class Global {
     public static final String SP_SYSTEM="config";
     public static final String KEY_MOVE_Effect = "move_effect";
     public static final String KEY_DOWNLOAD_ID="downloadId";
+    public static final String KEY_MOVE_SPEED="moveSpeed";
 
     public static final String FL_QQFILE="/Tencent/QQfile_recv";
     public static final String FL_WECHAT="/Tencent/MicroMsg/Download";

@@ -40,7 +40,6 @@ import com.gzz100.nameplate.bean.Device;
 import com.gzz100.nameplate.dao.DeviceDao;
 import com.gzz100.nameplate.global.Global;
 import com.gzz100.nameplate.receiver.WiFiReceiver;
-import com.gzz100.nameplate.utils.connect.SendCmdUtil;
 import com.gzz100.nameplate.utils.system.WifiAdmin;
 
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ import butterknife.OnClick;
 import static com.gzz100.nameplate.global.Global.JUST_STOP_ANIM;
 import static com.gzz100.nameplate.global.Global.NETWORK_STATE_CHANGED;
 import static com.gzz100.nameplate.global.Global.REQUST_LOCATION_PERMISSION_CODE;
-import static com.gzz100.nameplate.global.Global.SEND_TEST;
 import static com.gzz100.nameplate.global.Global.UPDATE_NETWORK_INFO;
 import static com.gzz100.nameplate.global.Global.WIFI_AVAILABLE_ACTION;
 import static com.gzz100.nameplate.global.Global.WIFI_DISABLE;
@@ -85,10 +83,6 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SEND_TEST:
-                    SendCmdUtil sendCmdUtil = new SendCmdUtil(getActivity(),connHandler);
-                    sendCmdUtil.sendCmd(SendCmdUtil.Cmd.Test);
-                    break;
                 case JUST_STOP_ANIM:
                     mTvTip.setText(R.string.tapTocheck);
                     mInsideAnim.cancel();
@@ -111,18 +105,18 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
                     NetworkInfo networkInfo = msg.getData().getParcelable(Global.EXTRA_NETWORKSTATE);
                     if (networkInfo != null) {
                         if (networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
-//                            sendTestCmd();
                             mTvState.setText(getString(R.string.connectedTo) + mWifiAdmin.getWifiInfo().getSSID());
+                            refreshWifiList();
                             connHandler.sendEmptyMessageDelayed(JUST_STOP_ANIM, 3000);
+                            updateView();
                         } else if (networkInfo.getState().equals(NetworkInfo.State.CONNECTING)) {
                             mTvState.setText(R.string.connecting);
                         } else if (networkInfo.getState().equals(NetworkInfo.State.DISCONNECTING)) {
                             mTvState.setText(R.string.disconnecting);
                         } else if (networkInfo.getState().equals(NetworkInfo.State.DISCONNECTED)) {
                             mTvState.setText(R.string.disconnected);
+                            updateView();
                         }
-                        // 刷新状态显示
-                        refreshWifiList();
                     }
                     break;
             }
@@ -132,6 +126,7 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
     private long mOldTime;
     private DeviceDao mDeviceDao;
     private List<Device> mAddedList;
+    private long mUpdateTime;
 
     @Nullable
     @Override
@@ -200,12 +195,11 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
 
     private void refreshWifiList() {
         long currentTime = System.currentTimeMillis();
-        if (!(currentTime - mOldTime > 5000)) {
+        if (currentTime - mOldTime < 2000) {
             return;
         }
         mOldTime = currentTime;
-
-        List<ScanResult> scanResults = mWifiAdmin.startScan();
+        List<ScanResult> scanResults = mWifiAdmin.mWifiManager.getScanResults();
         mWifiList.clear();
         mAddedList.clear();
         List<Device> list = mDeviceDao.queryBuilder().list();
@@ -215,28 +209,43 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
             boolean endFlag = scanResult.SSID.endsWith(Global.SSID_END);
             if (startFlag&&endFlag){
                 mWifiList.add(scanResult);
+                mConnectAdapter.notifyItemInserted(mWifiList.size());
+                mRecyclerView.smoothScrollToPosition(mWifiList.size());
             }
         }
+        String result = getString(R.string.detectResult) + mWifiList.size();
+        mTvCheckResult.setText(result);
         mConnectAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mConnectAdapter);
+    }
 
+    private void updateView(){
+        long currentTime = System.currentTimeMillis();
+        if (currentTime-mUpdateTime<1000){
+            return;
+        }
+        mUpdateTime = currentTime;
         String ssid = mWifiAdmin.getWifiInfo().getSSID();
         boolean startFlag = ssid.contains(Global.SSID_START);
         boolean endFlag = ssid.contains(Global.SSID_END);
-        if (startFlag && endFlag) {
+        if (startFlag&&endFlag){
             mTvState.setTextColor(Color.parseColor("#00C853"));
             mIvWifiLogo.setImageResource(R.drawable.ic_wifi_green_a700_svg);
             mIvRoundInside.setImageResource(R.drawable.connect_view_completed);
-        } else {
+        }else {
             mTvState.setTextColor(Color.parseColor("#757575"));
             mIvWifiLogo.setImageResource(R.drawable.ic_wifi_green_a700_svg_uncomplete);
             mIvRoundInside.setImageResource(R.drawable.connect_view_uncomplete);
         }
+
         String result = getString(R.string.detectResult) + mWifiList.size();
         mTvCheckResult.setText(result);
-
+        mConnectAdapter.notifyDataSetChanged();
     }
 
     private void roundClick() {
+        updateView();
+        mWifiAdmin.startScan();
         if (mWifiList.size() == 1) {
             if (mWifiAdmin.getWifiInfo().getSSID().equals("\"" + mWifiList.get(0).SSID + "\"")) {
                 return;
@@ -257,15 +266,6 @@ public class ConnectFragment extends Fragment implements View.OnClickListener, L
         }
     }
 
-    private void sendTestCmd() {
-        String ssid = mWifiAdmin.getWifiInfo().getSSID();
-        boolean startFlag = ssid.contains(Global.SSID_START);
-        boolean endFlag = ssid.contains(Global.SSID_END);
-        if (startFlag&&endFlag){
-            connHandler.sendEmptyMessageDelayed(SEND_TEST,2000);
-        }
-
-    }
 
     @Override
     public void onItemClick(View view, int position) {

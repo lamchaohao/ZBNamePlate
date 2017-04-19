@@ -2,6 +2,7 @@ package com.gzz100.nameplate.utils.connect;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
@@ -65,9 +66,7 @@ public class SendCmdUtil {
         if (startFlag && endFlag) {
             macStr = ssid.substring(ssid.indexOf("[") + 1, ssid.indexOf("]"));
         } else {
-            Message message = mHandler.obtainMessage();
-            message.what = WIFI_ERRO;
-            mHandler.sendMessage(message);
+            mHandler.sendEmptyMessage(WIFI_ERRO);
             return;
         }
         String regEx = "[0-9a-fA-F]{6}";
@@ -180,10 +179,20 @@ public class SendCmdUtil {
 
         }catch (SocketException e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(SOCKET_ERRO);
+            Message message = mHandler.obtainMessage();
+            message.what=SOCKET_ERRO;
+            Bundle bundle=new Bundle();
+            bundle.putString("error",e.getMessage());
+            message.setData(bundle);
+            mHandler.sendMessage(message);
         } catch (IOException e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(SOCKET_ERRO);
+            Message message = mHandler.obtainMessage();
+            message.what=SOCKET_ERRO;
+            Bundle bundle=new Bundle();
+            bundle.putString("error",e.getMessage());
+            message.setData(bundle);
+            mHandler.sendMessage(message);
         } finally {
             if (socket != null && !socket.isClosed()) {
                 try {

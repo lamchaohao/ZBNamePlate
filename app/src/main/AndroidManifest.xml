@@ -58,6 +58,7 @@
         </activity>
         <activity android:name="com.gzz100.nameplate.activity.HelpActivity">
         </activity>
+        <activity android:name=".activity.SortNameActivity"/>
     </application>
 
 </manifest>

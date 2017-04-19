@@ -8,6 +8,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.gzz100.nameplate.R;
 import com.gzz100.nameplate.global.Global;
 import com.gzz100.nameplate.utils.system.WifiAdmin;
 
@@ -43,16 +44,16 @@ public class SendDataUtil {
                         case UPDATE_PROGRESS:
                             int arg1 = msg.arg1;
                             if (arg1==100){
-                                Toast.makeText(mContext,"已发送",Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, R.string.sent,Toast.LENGTH_LONG).show();
                             }
 
                             break;
                         case WIFI_ERRO:
-                            Toast.makeText(mContext,"所连接WiFi非本公司产品，请切换WiFi",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,R.string.tos_wifi_switch,Toast.LENGTH_LONG).show();
                             mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                             break;
                         case CONNECT_NORESPONE:
-                            Toast.makeText(mContext,"连接错误，请重新连接屏幕",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,R.string.tos_wifi_timeout,Toast.LENGTH_LONG).show();
                             break;
                     }
 

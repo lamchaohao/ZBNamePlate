@@ -1,7 +1,6 @@
 package com.gzz100.nameplate.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gzz100.nameplate.R;
@@ -51,11 +51,6 @@ public class SendAdapter extends RecyclerView.Adapter{
         viewHolder.tvSendDevice.setText(device.getDeviceName());
         viewHolder.tvSendWifi.setText(device.getSsid());
 
-        if (device.getIsOnline()) {
-            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_connected_green_a700_36dp);
-        }else {
-            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_light_blue_500_36dp);
-        }
         if (account!=null){
             viewHolder.tvSendName.setText(account.getAccountName());
         }
@@ -66,10 +61,21 @@ public class SendAdapter extends RecyclerView.Adapter{
             viewHolder.tvSendState.setVisibility(View.GONE);
         }
         if (namePlate.isFocus()){
-            viewHolder.llSendItem.setBackgroundColor(Color.parseColor("#FFCC80"));
+            viewHolder.llSendItem.setBackgroundResource(R.drawable.focus_bg);
         }else {
-            viewHolder.llSendItem.setBackgroundResource(R.drawable.recycler_bg);
+            if (device.getIsOnline()){
+                viewHolder.llSendItem.setBackgroundResource(R.drawable.recycler_bg);
+            }else {
+                viewHolder.llSendItem.setBackgroundResource(R.drawable.un_focus_bg);
+            }
         }
+
+        if (device.getIsOnline()) {
+            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_connected_green_a700_36dp);
+        }else {
+            viewHolder.ivSendWifi.setImageResource(R.drawable.ic_cast_light_blue_500_36dp);
+        }
+
         if (mOnItemClickLitener!=null){
             viewHolder.llSendItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +94,7 @@ public class SendAdapter extends RecyclerView.Adapter{
                 }
             });
         }
-
+        viewHolder.progressBar.setProgress(namePlate.getProgress());
     }
 
 
@@ -111,26 +117,29 @@ public class SendAdapter extends RecyclerView.Adapter{
     public class SendViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_sendName)
-        TextView tvSendName;
+        public TextView tvSendName;
         @BindView(R.id.iv_sendWifi)
-        ImageView ivSendWifi;
+        public ImageView ivSendWifi;
         @BindView(R.id.tv_sendDevice)
-        TextView tvSendDevice;
+        public TextView tvSendDevice;
         @BindView(R.id.tv_sendWifi)
-        TextView tvSendWifi;
+        public TextView tvSendWifi;
         @BindView(R.id.ll_sendWifi)
-        LinearLayout llSendWifi;
+        public LinearLayout llSendWifi;
         @BindView(R.id.iv_sendSend)
-        ImageView ivSendSend;
+        public ImageView ivSendSend;
         @BindView(R.id.ll_sendItem)
-        LinearLayout llSendItem;
+        public LinearLayout llSendItem;
         @BindView(R.id.tv_sendState)
-        TextView tvSendState;
+        public TextView tvSendState;
+        @BindView(R.id.pb_send)
+        public ProgressBar progressBar;
 
         public SendViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(SendViewHolder.this, itemView);
         }
+
     }
 
 }

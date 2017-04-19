@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">无线桌牌</string>
+
     <string name="fromQQ">从QQ文件目录</string>
     <string name="fromWechat">从微信文件目录</string>
     <string name="fromOther">其他目录</string>
@@ -21,14 +22,22 @@
     <string name="textEffect">文字效果:</string>
     <string name="edit">编辑</string>
     <string name="connectWifi">连接</string>
+    <string name="pressToexit">再按一次返回退出程序</string>
     <string name="setting">设置</string>
     <string name="sendAll">全部发送</string>
     <string name="sort">排序</string>
+    <string name="selected">已选</string>
+    <string name="candidate">可选</string>
+    <string name="addedToSelected">成功添加到已选</string>
+    <string name="noneAccount">无可选择内容</string>
+    <string name="save">保存</string>
     
     <string name="test">通信</string>
     <string name="reset">重置</string>
     <string name="pause">暂停</string>
     <string name="resume">恢复</string>
+    <string name="fromyou">来自你</string>
+    <string name="fromServer">来自桌牌</string>
 
     <string name="testSuccess">通信成功</string>
     <string name="pauseSuccess">暂停成功</string>
@@ -62,6 +71,7 @@
     <string name="add">添加</string>
     <string name="read_record">读取记录:</string>
     <string name="selectEffectForLongtext">文字过长显示效果:</string>
+    <string name="selectMoveSpeed">文字过长时移动速度:</string>
     <string name="leftMove">左移</string>
     <string name="leftAndRight">先左移后右移</string>
 
@@ -116,36 +126,36 @@
 
     <string name="use_help">使用帮助</string>
     <string name="help_part1">
-         1.	无法连接铭牌?\n请检查铭牌是否正常工作.铭牌的Wi-Fi的默认密码为12345678.\n
+         1.	无法连接桌牌?\n请检查桌牌是否正常工作.桌牌的Wi-Fi的默认密码为12345678.\n
     </string>
     <string name="help_part2">
-         2.	APP中无法查看铭牌Wi-Fi?\n
+         2.	APP中无法查看桌牌Wi-Fi?\n
         检查桌牌是否启动.若已启动,检查是否开启权限.\n
-        打开系统设置-应用-无线铭牌-权限管理-允许使用定位权限;允许使用开启Wi-Fi权限\n
+        打开系统设置-应用-无线桌牌-权限管理-允许使用定位权限;允许使用开启Wi-Fi权限\n
     </string>
     <string name="help_part3">
-        3.	铭牌无显示?\n
-    确认铭牌开关是否启动.如未启动则启动.\n
+        3.	桌牌无显示?\n
+    确认桌牌开关是否启动.如未启动则启动.\n
     如已启动,检查电池是否电量低.请插入电源线进行充电.\n
-    如电量良好,则可进入无线铭牌APP连接并发送内容.\n
+    如电量良好,则可进入无线桌牌APP连接并发送内容.\n
     </string>
     <string name="help_part4">
      4.	APP无法运行?\n
-    进入手机系统设置-应用-无线铭牌-清除数据.\n
+    进入手机系统设置-应用-无线桌牌-清除数据.\n
     重新下载APP安装\n
     </string>
     <string name="help_part5">
     5.	发送内容失败?\n
-    请检查当前连接的Wi-Fi是否属于无线铭牌的Wi-Fi,如果不是,请将Wi-Fi连接到铭牌,然后重试发送内容.\n
+    请检查当前连接的Wi-Fi是否属于无线桌牌的Wi-Fi,如果不是,请将Wi-Fi连接到桌牌,然后重试发送内容.\n
     </string>
     <string name="help_part6">
    6.	内容发送成功,屏幕无显示最新内容?\n
-    请检查手机所连接的Wi-Fi是否为需要发送内容的铭牌的Wi-Fi?\n
+    请检查手机所连接的Wi-Fi是否为需要发送内容的桌牌的Wi-Fi?\n
     </string>
     <string name="help_part7">
-    7.	铭牌无响应\n
-    若在发送内容或者调节亮度过程中有此提示,请将铭牌重新启动,再次连接并发送即可.\n
-    请检查是否有多台手机或PC连接到同一铭牌,请尽量使用一台设备进行连接并发送.\n
+    7.	桌牌无响应\n
+    若在发送内容或者调节亮度过程中有此提示,请将桌牌重新启动,再次连接并发送即可.\n
+    请检查是否有多台手机或PC连接到同一桌牌,请尽量使用一台设备进行连接并发送.\n
     </string>
     <string name="help_part8">
    8.	如何添加字体?\n

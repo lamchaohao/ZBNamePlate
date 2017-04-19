@@ -50,8 +50,8 @@ public class SortActivity extends BaseActivity implements Listener.OnUpwardListe
         mAdapter.setOnUpwardListener(this);
         mAdapter.setOnItemClickListener(this);
         Button button=new Button(this);
-        button.setBackgroundResource(R.drawable.sendbutton_bg);
-        button.setText("完成");
+        button.setBackgroundResource(R.drawable.focus_bg);
+        button.setText(R.string.save);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

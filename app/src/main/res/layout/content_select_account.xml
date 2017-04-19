@@ -9,10 +9,9 @@
         android:padding="12dp"
         android:gravity="center|left"
         android:textColor="@color/textPrimary"
+        android:background="@drawable/recycler_bg"
         android:drawableLeft="@drawable/ic_account_box_light_blue_500_36dp"
         android:drawableRight="@drawable/ic_check_circle_green_500_36dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/recycler_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

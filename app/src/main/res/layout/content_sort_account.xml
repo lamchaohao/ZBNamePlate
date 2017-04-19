@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:id="@+id/ll_sort"
-              android:layout_marginTop="8dp"
-              android:layout_width="match_parent"
+              android:layout_marginTop="4dp"
+              android:layout_marginBottom="4dp"
+              android:orientation="horizontal"
               android:background="@drawable/recycler_bg"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/iv_upward"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_account_box_light_blue_500_36dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/tv_account_name"
-        android:layout_weight="1"
-        android:textSize="18sp"
-        android:padding="12dp"
-        android:gravity="center|left"
-        android:textColor="@color/textPrimary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/iv_upward"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_account_box_light_blue_500_36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_account_name"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:gravity="center|left"
+            android:textColor="@color/textPrimary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
 
-    <ImageView
-        android:id="@+id/iv_accountIcon"
-        android:src="@drawable/ic_add_circle_green_a700_36dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/iv_accountIcon"
+            android:src="@drawable/ic_add_circle_green_a700_36dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 </LinearLayout>

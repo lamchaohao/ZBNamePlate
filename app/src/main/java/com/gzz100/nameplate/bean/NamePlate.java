@@ -10,6 +10,7 @@ public class NamePlate {
     private String state;
     private String wifiState;
     private boolean isFocus;
+    private int progress;
 
     public NamePlate(Account account, Device device, String state, String wifiState) {
         this.account = account;
@@ -57,5 +58,13 @@ public class NamePlate {
 
     public void setFocus(boolean focus) {
         isFocus = focus;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }

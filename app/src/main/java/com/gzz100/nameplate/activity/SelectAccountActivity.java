@@ -2,6 +2,7 @@ package com.gzz100.nameplate.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ public class SelectAccountActivity extends BaseActivity {
         mAccountList = ((App) getApplication()).getDaoSession().getAccountDao().queryBuilder().list();
         SelectAccountAdapter adapter=new SelectAccountAdapter(this, mAccountList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new Listener.OnItemClickListener() {
             @Override
@@ -43,6 +45,7 @@ public class SelectAccountActivity extends BaseActivity {
             }
         });
     }
+
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
         toolbar.setTitle(R.string.selectAccount);

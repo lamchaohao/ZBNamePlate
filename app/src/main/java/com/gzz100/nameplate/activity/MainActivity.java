@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initToolbar();
         initView();
-
-
     }
+
     private void initToolbar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
 
@@ -119,17 +118,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 0:
                 mIvAccount.setImageResource(R.drawable.ic_account_box_light_blue_500_36dp);
                 mTvAccount.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                mToolbarTitle.setText("编辑");
+                mToolbarTitle.setText(R.string.edit);
                 break;
             case 1:
                 mIvConnet.setImageResource(R.drawable.ic_wifi_light_blue_500_36dp);
                 mTvConnet.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                mToolbarTitle.setText("连接");
+                mToolbarTitle.setText(R.string.connectWifi);
                 break;
             case 2:
                 mIvSetting.setImageResource(R.drawable.ic_settings_light_blue_500_36dp);
                 mTvSetting.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                mToolbarTitle.setText("设置");
+                mToolbarTitle.setText(R.string.setting);
                 break;
         }
     }
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (!backFlag){//第一次点击
-            Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.pressToexit, Toast.LENGTH_SHORT).show();
             firstTime = System.currentTimeMillis();
             backFlag=true;
         }else{
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
             }else{
                 //防止时间过长再次点击没反应
-                Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.pressToexit, Toast.LENGTH_SHORT).show();
                 firstTime = System.currentTimeMillis();
 
             }

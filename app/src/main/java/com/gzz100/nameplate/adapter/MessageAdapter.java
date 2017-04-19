@@ -46,9 +46,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
             viewHolder.serverTextView.setVisibility(View.GONE);
             viewHolder.fromServerTv.setVisibility(View.GONE);
             viewHolder.clientTextView.setText(mMessageList.get(position).getMessageText());
-            viewHolder.fromMeTv.setText("来自你");
+            viewHolder.fromMeTv.setText(R.string.fromyou);
         }else {
-            viewHolder.fromServerTv.setText("来自铭牌");
+            viewHolder.fromServerTv.setText(R.string.fromServer);
             viewHolder.clientTextView.setVisibility(View.GONE);
             viewHolder.fromMeTv.setVisibility(View.GONE);
             viewHolder.serverTextView.setText(mMessageList.get(position).getMessageText());
