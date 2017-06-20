@@ -30,6 +30,7 @@ public class DrawBitmapUtil {
     private boolean mIsItalic;
     private boolean mIsUnderline;
     private File mTypeface;
+
     public DrawBitmapUtil(Context context,String name) {
         mName=name;
         mIsMoveLeft = context.getSharedPreferences(Global.SP_SYSTEM, Context.MODE_PRIVATE).getBoolean(Global.KEY_MOVE_Effect, false);

@@ -30,6 +30,7 @@ import static com.gzz100.nameplate.global.Global.GENFILE_DONE;
 import static com.gzz100.nameplate.global.Global.PAUSE_FAILE;
 import static com.gzz100.nameplate.global.Global.PREPARE_FILE;
 import static com.gzz100.nameplate.global.Global.REQUST_LOCATION_PERMISSION_CODE;
+import static com.gzz100.nameplate.global.Global.RESEND;
 import static com.gzz100.nameplate.global.Global.SEND_DONE;
 import static com.gzz100.nameplate.global.Global.UPDATE_NETWORK_INFO;
 import static com.gzz100.nameplate.global.Global.UPDATE_PROGRESS;
@@ -108,6 +109,9 @@ public abstract class BaseWifiActivity extends BaseActivity {
                     NetworkInfo networkInfo = msg.getData().getParcelable(Global.EXTRA_NETWORKSTATE);
                     onUpdateNetworkInfo(networkInfo);
                     break;
+                case RESEND:
+                    onResend();
+                    break;
             }
         }
     }
@@ -135,6 +139,8 @@ public abstract class BaseWifiActivity extends BaseActivity {
     protected void onGenFileDone(Message msg){}
 
     protected void onSendDone(){}
+
+    protected void onResend(){}
 
     @Override
     protected void onDestroy() {

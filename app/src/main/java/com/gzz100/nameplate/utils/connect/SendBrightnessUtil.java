@@ -95,7 +95,7 @@ public class SendBrightnessUtil {
         int macInt4 = Integer.parseInt(mac4, 16);
         try {
             socket = new Socket(Global.SERVER_IP, Global.SERVER_PORT);
-
+            socket.setSoTimeout(10000);//10s超时
             byte[] pauseCMD = new byte[16];
             pauseCMD[0]= (byte) macInt1;
             pauseCMD[1]= (byte) macInt2;

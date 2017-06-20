@@ -44,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.gzz100.nameplate.global.Global.CONNECT_NORESPONE;
 import static com.gzz100.nameplate.global.Global.CONN_ERRO;
 import static com.gzz100.nameplate.global.Global.GENFILE_DONE;
 import static com.gzz100.nameplate.global.Global.UPDATE_PROGRESS;
@@ -273,6 +274,10 @@ public class AccountFragment extends Fragment implements Listener.OnItemClickLis
                 case CONN_ERRO:
                     isSending = false;
                     Toast.makeText(getContext(), R.string.tos_connectTimeout, Toast.LENGTH_LONG).show();
+                    break;
+                case CONNECT_NORESPONE:
+                    isSending = false;
+                    Snackbar.make(mRecyclerView, R.string.tos_connectTimeout, Snackbar.LENGTH_LONG).show();
                     break;
             }
         }

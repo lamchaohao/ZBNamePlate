@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AboutActivity extends BaseActivity {
-
     private static final int UPDATE_CODE = 100;
     private static final int IS_LATEST = 200;
     String mResult;

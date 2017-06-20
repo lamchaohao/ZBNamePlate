@@ -13,11 +13,9 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzz100.nameplate.App;
@@ -42,27 +40,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.gzz100.nameplate.global.Global.GENFILE_DONE;
 import static com.gzz100.nameplate.global.Global.PREPARE_FILE;
+import static com.gzz100.nameplate.global.Global.RESEND;
 
 public class MultiSendActivity extends BaseWifiActivity implements Listener.OnItemClickListener, Listener.OnPlayClickListener, View.OnClickListener {
 
     private static final int REQUEST_ACCOUNT_SELECT = 778;
     private static final int SORT_CODE = 665;
-    @BindView(R.id.tv_sendName)
-    TextView mTvSendName;
-    @BindView(R.id.iv_sendWifi)
-    ImageView mIvSendWifi;
-    @BindView(R.id.tv_sendDevice)
-    TextView mTvSendDevice;
-    @BindView(R.id.tv_sendWifi)
-    TextView mTvSendWifi;
-    @BindView(R.id.ll_sendWifi)
-    LinearLayout mLlSendWifi;
-    @BindView(R.id.tv_sendTip)
-    TextView mTvSendTip;
-    @BindView(R.id.ll_sendItem)
-    LinearLayout mLlSendItem;
     @BindView(R.id.cv_send)
     CardView mCvSend;
     @BindView(R.id.send_rcv)
@@ -89,6 +73,7 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     private List<Account> mAccountList;
     private AccountDao mAccountDao;
     private int mPosIndex;
+    private SendDataUtil sendDataUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +82,12 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         ButterKnife.bind(this);
         loadData();
         initView();
+        onScanAvailable(null);
     }
 
 
     private void loadData() {
+        sendDataUtil = new SendDataUtil(this, mHandler);
         mWifiAdmin = new WifiAdmin(this);
         mWifiList = new ArrayList<>();
         mNamePlateList = new ArrayList<>();
@@ -156,7 +143,12 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
                 mNamePlate.setState(getString(R.string.connected));
                 mAdapter.notifyItemChanged(mPosIndex);
                 if (mNeedSend) {
-                    mHandler.sendEmptyMessageDelayed(PREPARE_FILE, 3000);//3秒后开始发送;
+                    String ssid = mWifiAdmin.getWifiInfo().getSSID();
+                    Log.i("updateNetwork","ssid=== "+ssid);
+                    Message msg = mHandler.obtainMessage();
+                    msg.what=PREPARE_FILE;
+                    msg.obj=ssid;
+                    mHandler.sendMessageDelayed(msg, 3000);//3秒后开始发送;
                     mNeedSend = false;
                 }
             } else if (networkInfo.getState().equals(NetworkInfo.State.CONNECTING)) {
@@ -226,12 +218,17 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     protected void onPrepareFile(Message msg) {
         DrawBitmapUtil drawBitmapUtil = new DrawBitmapUtil(this,mNamePlate.getAccount());
         Bitmap bitmap = drawBitmapUtil.drawBitmap();
-        GenFileUtil genFileUtil = new GenFileUtil(this, bitmap, mHandler);
+        String ssid = (String) msg.obj;
+        GenFileUtil genFileUtil = new GenFileUtil(this, bitmap, mHandler,ssid);
         genFileUtil.startGenFile();
         mNamePlate.setState(getString(R.string.prepareFile));
         mAdapter.notifyItemChanged(mPosIndex);
     }
 
+    /**
+     * 发送进度
+     * @param msg
+     */
     @Override
     protected void onUpdateProgress(Message msg) {
         int progress = msg.arg1;
@@ -248,24 +245,39 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         }
     }
 
+    /**
+     * 文件生成成功
+     * @param msg
+     */
     @Override   //开始发送
     protected void onGenFileDone(Message msg) {
 
         if (!mNamePlate.getDevice().getIsOnline()){
-            retryTime=4;
+            retryTime=5;
             Snackbar.make(mSendRcv,mNamePlate.getDevice().getDeviceName()+getString(R.string.offLine),Snackbar.LENGTH_SHORT).show();
             onSendFail(false);
             return;
         }
-
-        SendDataUtil sendDataUtil = new SendDataUtil(this, mHandler);
+        String filePath = (String) msg.obj;
+        Log.i("genFileDone","filepath=== "+filePath);
+        sendDataUtil.setDIY_Name(true);
+        sendDataUtil.setmFilePath(filePath);
         sendDataUtil.send();
         mNamePlate.setState(getString(R.string.startSend));
         mAdapter.notifyItemChanged(mPosIndex);
     }
 
+    @Override
+    protected void onResend() {
+        sendDataUtil.send();
+        mNamePlate.setState(getString(R.string.startSend));
+        mAdapter.notifyItemChanged(mPosIndex);
+    }
 
-
+    /**
+     * 群发
+     * @param position 对应到哪个位置
+     */
     private void sendByStep(int position) {
         isSendAll = true;
         boolean isOnline = mNamePlateList.get(position).getDevice().getIsOnline();
@@ -277,14 +289,14 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         mPosIndex=position;
         if (!isOnline) {
             Snackbar.make(mSendRcv,mNamePlateList.get(position).getDevice().getDeviceName()+getString(R.string.offLine),Snackbar.LENGTH_SHORT).show();
-            retryTime=4;
+            retryTime=5;
             onSendFail(false);
             return;
         }
 
         mNamePlate.setFocus(true);
         mNamePlate.setProgress(0);
-        connectWifi(position);
+        connectWifi(position);//连接至该桌牌
         mAdapter.notifyItemChanged(position);
         mNeedSend = true;
         if (mWifiAdmin.getWifiInfo().getSSID().equals("\"" + mNamePlate.getDevice().getSsid() + "\"")) {
@@ -293,7 +305,9 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
     }
 
 
-    //发送成功
+    /**
+     * 发送成功回调
+     */
     private void onSendSuccess() {
 
         retryTime = 0;
@@ -311,26 +325,34 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         mSendRcv.smoothScrollToPosition(mPosIndex);
     }
 
-    //发送失败
+
+    /**
+     * 发送失败回调
+     * @param isOnline 是否在线
+     *                 如果在线会执行重试
+     *                 不在线则会直接显示发送失败
+     */
     private void onSendFail(boolean isOnline) {
         //发送失败,重试几次
         retryTime++;
-        if (retryTime < 4) {
+        if (retryTime < 5) {
             switch (retryTime) {
                 case 1:
-                    Snackbar.make(mSendRcv, R.string.tos_retry5, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mSendRcv, R.string.tos_retry10, Snackbar.LENGTH_SHORT).show();
                     mNamePlate.setState(getString(R.string.start_try));
                     mAdapter.notifyItemChanged(mPosIndex);
-                    mHandler.sendEmptyMessageDelayed(GENFILE_DONE, 5000);
+                    connectWifi(mPosIndex);
+                    mHandler.sendEmptyMessageDelayed(RESEND, 10000);
                     break;
                 default:
-                    Snackbar.make(mSendRcv, R.string.tos_retry3, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mSendRcv, R.string.tos_retry5, Snackbar.LENGTH_SHORT).show();
                     mNamePlate.setState(retryTime + getString(R.string.tos_retrytime));
                     mAdapter.notifyItemChanged(mPosIndex);
-                    mHandler.sendEmptyMessageDelayed(GENFILE_DONE, 3000);
+                    connectWifi(mPosIndex);
+                    mHandler.sendEmptyMessageDelayed(RESEND, 5000);
                     break;
             }
-        } else {
+        } else {//重试次数达到上限,则发送失败,进行下一个发送
             if (mNamePlate!=null){
                 if (isOnline) {
                     mNamePlate.setState(getString(R.string.sent_fail));
@@ -348,9 +370,14 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
                 next = 0;
             }
         }
-        mSendRcv.smoothScrollToPosition(mPosIndex);
+        mSendRcv.smoothScrollToPosition(mPosIndex);//若有多个屏幕,需滑动才能查看到该铭牌,则滑动到指定item中
     }
 
+    /**
+     * 点击listview条目
+     * @param view
+     * @param position
+     */
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, SelectAccountActivity.class);
@@ -358,6 +385,11 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
         mPositionClick = position;
     }
 
+    /**
+     * recycleview条目中的发送按钮
+     * @param view
+     * @param position position
+     */
     @Override
     public void onPlayClick(View view, int position) {
         boolean isOnline = mNamePlateList.get(position).getDevice().getIsOnline();
@@ -369,7 +401,7 @@ public class MultiSendActivity extends BaseWifiActivity implements Listener.OnIt
             Snackbar.make(mSendRcv,mNamePlateList.get(position).getDevice().getDeviceName()+getString(R.string.offLine),Snackbar.LENGTH_SHORT).show();
             return;
         }
-        isSendAll = false;
+        isSendAll = false;//取消发送全部功能
         mNamePlate = mNamePlateList.get(position);
         mPosIndex=position;
         mNamePlate.setFocus(true);

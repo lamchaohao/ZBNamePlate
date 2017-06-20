@@ -83,13 +83,13 @@ public class AddFromFileActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_add_fromQQ:
-                File parentFile = new File(Environment.getExternalStorageDirectory() + FL_QQFILE);
-                if (!parentFile.exists()) {
-                    parentFile.mkdirs();
+                File qqRecFile = new File(Environment.getExternalStorageDirectory() + FL_QQFILE);
+                if (!qqRecFile.exists()) {
+                    qqRecFile.mkdirs();
                 }
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_DEFAULT);
-                intent.setDataAndType(Uri.fromFile(parentFile), "file/*");
+                intent.setDataAndType(Uri.fromFile(qqRecFile), "file/*");
                 startActivityForResult(intent, SELECT_FILE);
                 break;
             case R.id.tv_add_fromWechat:

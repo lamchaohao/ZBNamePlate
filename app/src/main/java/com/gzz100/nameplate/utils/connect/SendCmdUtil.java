@@ -106,7 +106,7 @@ public class SendCmdUtil {
         }
         try {
             socket = new Socket(Global.SERVER_IP, Global.SERVER_PORT);
-
+            socket.setSoTimeout(10000);
             byte[] pauseCMD = new byte[16];
             pauseCMD[0] = (byte) macInt1;
             pauseCMD[1] = (byte) macInt2;
@@ -181,17 +181,13 @@ public class SendCmdUtil {
             e.printStackTrace();
             Message message = mHandler.obtainMessage();
             message.what=SOCKET_ERRO;
-            Bundle bundle=new Bundle();
-            bundle.putString("error",e.getMessage());
-            message.setData(bundle);
+            message.obj=e.getMessage();
             mHandler.sendMessage(message);
         } catch (IOException e) {
             e.printStackTrace();
             Message message = mHandler.obtainMessage();
             message.what=SOCKET_ERRO;
-            Bundle bundle=new Bundle();
-            bundle.putString("error",e.getMessage());
-            message.setData(bundle);
+            message.obj=e.getMessage();
             mHandler.sendMessage(message);
         } finally {
             if (socket != null && !socket.isClosed()) {

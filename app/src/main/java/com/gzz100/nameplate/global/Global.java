@@ -37,6 +37,7 @@ public class Global {
     public static final int WIFI_ENABLED = 304;
     public static final int NETWORK_STATE_CHANGED = 305;
     public static final int UPDATE_NETWORK_INFO = 306;
+    public static final int RESEND = 307;
     public static final int READ_FAILE = 400;
     public static final int PAUSE_FAILE = 401;
     public static final int CONNECT_TIMEOUT = 402;

@@ -3,6 +3,7 @@ package com.gzz100.nameplate.adapter;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.gzz100.nameplate.activity.BaseActivity;
 import com.gzz100.nameplate.bean.Account;
 
 
@@ -10,7 +11,8 @@ import com.gzz100.nameplate.bean.Account;
  * Created by Lam on 2017/3/28.
  */
 
-public class Listener {
+public class Listener{
+
     /**
      * 点击事件监听接口
      */

@@ -31,7 +31,7 @@
     <string name="addedToSelected">成功添加到已选</string>
     <string name="noneAccount">无可选择内容</string>
     <string name="save">保存</string>
-    
+
     <string name="test">通信</string>
     <string name="reset">重置</string>
     <string name="pause">暂停</string>
@@ -85,12 +85,12 @@
     <string name="tos_addedNone">添加0条记录</string>
     <string name="tos_sendAll_done">全部发送完毕</string>
     <string name="tos_retry5">WiFi异常,将于5秒后自动重试</string>
-    <string name="tos_retry3">WiFi异常,将于3秒后自动重试</string>
+    <string name="tos_retry10">WiFi异常,将于10秒后自动重试</string>
     <string name="tos_retrytime">次重试</string>
     <string name="tos_addFirst">请先添加桌牌设备</string>
     <string name="tos_needPermission">需要权限才能检测桌牌,请开启定位权限</string>
-    
-    <string name="prepareFile">准备文件</string>
+
+    <string name="prepareFile">准备数据</string>
     <string name="connecting">正在连接</string>
     <string name="connected">已连接</string>
     <string name="disconnecting">正在断开</string>
@@ -161,7 +161,7 @@
    8.	如何添加字体?\n
 	将字体文件添加到如下目录中:存储设备/fonts/zbFonts.\n
     </string>
-     <string name="help_part9">
+    <string name="help_part9">
     9.	批量添加内容时候字体乱码?\n
     可以点击屏幕上的切换编码.如果仍未解决问题,请将txt文件保存为GBK或者UTF-8编码.\n
     目前批量添加只支持txt文件,以换行符为间隔.一行文字代表一处内容.\n

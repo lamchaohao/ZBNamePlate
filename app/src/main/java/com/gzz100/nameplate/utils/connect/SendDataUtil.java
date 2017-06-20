@@ -6,6 +6,7 @@ import android.net.wifi.WifiInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzz100.nameplate.R;
@@ -17,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,9 +31,11 @@ import static com.gzz100.nameplate.global.Global.WIFI_ERRO;
  * Created by Lam on 2017/2/15.
  */
 
-public class SendDataUtil {
+public class SendDataUtil implements Runnable{
     private Context mContext;
     private Handler mHandler;
+    private boolean isDIY_Name;
+    private String mFilePath;
 
     public SendDataUtil(Context context,Handler handler) {
         this.mContext=context;
@@ -62,16 +67,22 @@ public class SendDataUtil {
         }
     }
 
-    public void send(){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                sendFile();
-            }
-        }.start();
+    public SendDataUtil(Context context,Handler handler,String filePath){
+        this(context,handler);
+        isDIY_Name=true;
+        mFilePath=filePath;
+        Log.i("sendData",filePath);
     }
 
+    public void send(){
+        new Thread(this).start();
+    }
+
+
+    @Override
+    public void run() {
+        sendFile();
+    }
 
 
     /**
@@ -154,7 +165,14 @@ public class SendDataUtil {
         }
         try {
             socket = new Socket(Global.SERVER_IP,Global.SERVER_PORT);
-            File file =new File(mContext.getFilesDir()+"/color.prg");
+            socket.setSoTimeout(10000);//超时时间10s
+            File file =null;
+            if (isDIY_Name) {
+                file=new File(mFilePath);
+            }else {
+                file =new File(mContext.getFilesDir()+"/color.prg");
+            }
+            Log.i("senData",file.getAbsolutePath());
             fis = new FileInputStream(file);
             os = socket.getOutputStream();
             byte[] buf = new byte[512];
@@ -190,17 +208,19 @@ public class SendDataUtil {
             byte[] readMsg = new byte[16];
             socket.getInputStream().read(readMsg);//读取返回
 
-
+            boolean testOk=true;
             for (int i = 0; i < readMsg.length; i++) {
                 if(testCMD[i]!=readMsg[i]){
+                    testOk=false;
                     mHandler.sendEmptyMessage(CONNECT_NORESPONE);
-                }else {
                 }
             }
-
-            //执行暂停指令
-            os.write(pauseCMD);
-            socket.getInputStream().read(readMsg);//读取返回
+            //test成功后再发送暂停指令
+            if (testOk) {
+                //执行暂停指令
+                os.write(pauseCMD);
+                socket.getInputStream().read(readMsg);//读取返回
+            }
 
             boolean pauseSuccess = true;
             for (int i = 0; i < readMsg.length; i++) {
@@ -208,6 +228,7 @@ public class SendDataUtil {
                     pauseSuccess = false;
                 }
             }
+            //暂停成功,开始发送
             if (pauseSuccess) {
                 int serialNum = (int) (file.length()/512);
                 if (file.length()%512==0){
@@ -292,13 +313,23 @@ public class SendDataUtil {
 
                 os.write(resetCMD);
                 socket.getInputStream().read(feedBackData);
+            }else{
+                //暂停不成功，或者就是返回不正确
+                Log.w("sendData","pause fail-----");
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("sendData","IOException-----info=="+e.toString());
+            if (e instanceof SocketTimeoutException) {
+                Log.e("sendData","IOException--SocketTimeoutException---info=="+e.toString());
+            }else if (e instanceof SocketException){
+                Log.e("sendData","IOException--SocketException---info=="+e.toString());
+            }
             mHandler.sendEmptyMessage(CONNECT_NORESPONE);
         }catch (Exception e){
             e.printStackTrace();
+            Log.w("sendData","Exception-----info=="+e.toString());
             mHandler.sendEmptyMessage(WIFI_ERRO);
         }finally {
             if (socket!=null&&!socket.isClosed()){
@@ -323,4 +354,13 @@ public class SendDataUtil {
         }
 
     }
+
+    public void setDIY_Name(boolean DIY_Name) {
+        isDIY_Name = DIY_Name;
+    }
+
+    public void setmFilePath(String mFilePath) {
+        this.mFilePath = mFilePath;
+    }
+
 }

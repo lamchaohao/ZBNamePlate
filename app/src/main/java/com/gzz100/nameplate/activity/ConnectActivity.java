@@ -108,18 +108,19 @@ public class ConnectActivity extends BaseActivity {
             SocketMessage smsg =null;
             switch (msg.what){
                 case SOCKET_ERRO:
-                    Bundle bundle = msg.getData();
-                    String error1 = bundle.getString("error");
-                    String message = "";
-
-                    if (error1.contains("ECONNREFUSED")) {
-                        message= getString(R.string.refuse_connect);//android.system.ErrnoException: connect failed: ECONNREFUSED (Connection refused)
-                    }else {
-                        message= getString(R.string.tos_wifi_timeout);
+                    String errMsg=null;
+                    String err = (String) msg.obj;
+                    if (err!=null){
+                        if (err.contains("ECONNREFUSED")) {
+                            errMsg= getString(R.string.refuse_connect);//android.system.ErrnoException: connect failed: ECONNREFUSED (Connection refused)
+                        }else {
+                            errMsg= getString(R.string.tos_wifi_timeout);
+                        }
+                        SocketMessage error=new SocketMessage(errMsg,System.currentTimeMillis(),false,true);
+                        mMessageList.add(error);
+                        mAdapter.notifyItemInserted(mMessageList.size());
                     }
-                    SocketMessage error=new SocketMessage(message,System.currentTimeMillis(),false,true);
-                    mMessageList.add(error);
-                    mAdapter.notifyItemInserted(mMessageList.size());
+
                     break;
                 case WIFI_ERRO:
                     Toast.makeText(ConnectActivity.this,R.string.tos_wifi_switch,Toast.LENGTH_LONG).show();

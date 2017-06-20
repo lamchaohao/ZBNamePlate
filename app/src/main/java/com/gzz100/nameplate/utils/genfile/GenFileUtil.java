@@ -42,8 +42,10 @@ public class GenFileUtil {
     private int mScreenHeight=16;
 
     private Handler mHandler;
-    private final boolean mIsMoveLeft;
+    private boolean mIsMoveLeft;
     private int mSpeed;
+    private boolean isDIYName;
+    private String diyFileName;
 
     public GenFileUtil(Context context, Bitmap bitmap,Handler handler) {
         mContext = context;
@@ -69,6 +71,13 @@ public class GenFileUtil {
             };
         }
     }
+
+    public GenFileUtil (Context context, Bitmap bitmap,Handler handler,String fileName){
+        this(context,bitmap,handler);
+        diyFileName = fileName;
+        isDIYName=true;
+    }
+
 
     private void initFileHead() {
         byte fileHeadLength = 4;     //总头长度
@@ -367,7 +376,11 @@ public class GenFileUtil {
         initItemPart();
         initTimeAxis();
 
-        mColorPRG = new File(mContext.getFilesDir()+"/color.prg");
+        if (isDIYName) {
+            mColorPRG = new File(mContext.getFilesDir()+"/"+diyFileName);
+        }else {
+            mColorPRG = new File(mContext.getFilesDir()+"/color.prg");
+        }
         if (mColorPRG.exists()) {
             mColorPRG.delete();
         }
@@ -393,7 +406,10 @@ public class GenFileUtil {
                 fos.write(mTimeAxisList.get(i));
             }
             fos.flush();
-            mHandler.sendEmptyMessage(GENFILE_DONE);
+            Message message = mHandler.obtainMessage();
+            message.obj=mColorPRG.getAbsolutePath();
+            message.what=GENFILE_DONE;
+            mHandler.sendMessage(message);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
